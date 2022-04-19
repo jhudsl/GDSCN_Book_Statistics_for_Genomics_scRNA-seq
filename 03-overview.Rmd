@@ -1,0 +1,69 @@
+# (PART\*) OVERVIEW {-}
+
+# Scope
+
+There are many programs available for scRNA-seq analysis. In this lesson, we will be using the `scran` and `scater` packages available from Bioconductor. We do not cover .fastq processing, nor do we explore the Seurat and scanpy pipelines.
+
+# Bioconductor reference book
+
+The lessons and activities are adapted from the excellent [Orchestrating Single-Cell Analysis with Bioconductor](https://bioconductor.org/books/release/OSCA/) book by Robert Amezquita, Aaron Lun, Stephanie Hicks, and Raphael Gottardo.
+
+# SingleCellExperiment
+
+Bioconductor stores data from single-cell experiments in a special class (the `SingleCellExperiment` class). The rows in this data class represent features of interest (such as genes, transcripts, or genomic regions), while the columns represent individual cells. This data class is the main data structure used in the `scran` and `scater` packages. In addition to storing count data, it can also store the results of dimensionality reduction methods as well as data for additional, alternative features (like spike-in transcripts).
+
+`SingleCellExperiment` objects are created using a command of the same name.
+
+```{r, warning = FALSE, message = FALSE, echo=FALSE}
+BiocManager::install("SingleCellExperiment")
+```
+
+```{r, warning = FALSE, message = FALSE}
+# AnVIL::install(c("SingleCellExperiment"))
+library(SingleCellExperiment)
+
+#create an empty data frame to use as an example 
+counts <- matrix(rpois(100, lambda = 10), ncol=10, nrow=10)
+pretend.cell.labels <- sample(letters, ncol(counts), replace=TRUE)
+pretend.gene.lengths <- sample(10000, nrow(counts))
+
+#create SingleCellExperiment object
+sce <- SingleCellExperiment(list(counts=counts),
+    colData=DataFrame(label=pretend.cell.labels),
+    rowData=DataFrame(length=pretend.gene.lengths),
+    metadata=list(study="GSE111111")
+)
+sce
+```
+
+When we look at the `SingleCellExperiment` object, we can see that information about the names of the features are stored in `rowData`. Likewise, the names of the cells (or samples) are stored in `colData`. Metadata is stored in `metadata`, while dimensionality reduction coordinates can be stored in `reducedDims()`. Alternate experiments (such as spike-in data) are stored in `altExp`.
+
+For more information on the `SingleCellExperiment` class, take a look at the [vignette](https://www.bioconductor.org/packages/release/bioc/vignettes/SingleCellExperiment/inst/doc/intro.html).
+
+# Obtaining Data
+
+For these exercises, we are using a dataset of cells from a mouse brain from [Zeisel et al. 2015](https://pubmed.ncbi.nlm.nih.gov/25700174/).This dataset contains about 3000 brain cells of a wide variety of types (such as neurons, glia, and oligodendrocytes). The library was prepared using a UMI-based (unique molecular identifiers) protocol, and the expression data you are working with is UMI counts that have been mapped to each gene.
+
+This dataset has already had low-quality cells removed prior to publication, but we will still run QC steps to verify that the remaining cells are of good quality.
+
+The dataset is stored as a `SingleCellExperiment` object in the `scRNAseq` package. Here we retrieve the dataset, as well as do a little bit of extra formatting to merge together redundant rows (which are the result of alternative genomic coordinates for the same gene). We also download the Ensembl gene IDs.
+
+```{r, warning = FALSE, message = FALSE, echo=FALSE}
+BiocManager::install("scRNAseq")
+BiocManager::install("scater")
+BiocManager::install("org.Mm.eg.db")
+```
+
+```{r, warning = FALSE, message = FALSE}
+# AnVIL::install(c("scRNAseq", "scater", "org.Mm.eg.db"))
+library(scRNAseq)
+sce.zeisel <- ZeiselBrainData()
+
+library(scater)
+sce.zeisel <- aggregateAcrossFeatures(sce.zeisel, 
+    id=sub("_loc[0-9]+$", "", rownames(sce.zeisel)))
+
+library(org.Mm.eg.db)
+rowData(sce.zeisel)$Ensembl <- mapIds(org.Mm.eg.db, 
+    keys=rownames(sce.zeisel), keytype="SYMBOL", column="ENSEMBL")
+```
