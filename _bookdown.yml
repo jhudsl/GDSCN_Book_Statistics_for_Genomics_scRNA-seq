@@ -3,7 +3,8 @@ chapter_name: "Chapter "
 repo: https://github.com/jhudsl/AnVIL_Template/
 rmd_files: ["index.Rmd",
             "01-intro.Rmd",
-            "02-chapter_of_course.Rmd",
+            "03-overview.Rmd",
+            "06-data-cleaning.Rmd",
             "About.Rmd",
             "References.Rmd"]
 new_session: yes
