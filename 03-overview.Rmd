@@ -15,7 +15,8 @@ Bioconductor stores data from single-cell experiments in a special class (the `S
 `SingleCellExperiment` objects are created using a command of the same name.
 
 ```{r, warning = FALSE, message = FALSE, echo=FALSE}
-BiocManager::install("SingleCellExperiment")
+install.packages("https://cran.r-project.org/src/contrib/matrixStats_0.61.0.tar.gz", repo=NULL, type="source")
+BiocManager::install(c("SummarizedExperiment","SingleCellExperiment","DelayedArray")
 ```
 
 ```{r, warning = FALSE, message = FALSE}
