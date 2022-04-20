@@ -18,11 +18,11 @@ Some experiments will use other metrics for quality control, such as RNA spike-i
 
 It is always a good idea to plot any metrics you're using as indicators of sample quality as the first step.
 
-```{r, warning = FALSE, message = FALSE, echo=FALSE}
+```{r, eval=F, warning = FALSE, message = FALSE, echo=FALSE}
 BiocManager::install("scater")
 ```
 
-```{r, warning = FALSE, message = FALSE}
+```{r, eval=F, warning = FALSE, message = FALSE}
 # AnVIL::install("scater")
 library(scater)
 sce.zeisel <- aggregateAcrossFeatures(sce.zeisel, 
@@ -54,7 +54,7 @@ The easiest way to identify low-quality cells is to set a quality threshold and 
 After you have identified the low-quality cells, you can easily remove them in R. 
 
 
-``` {r, warning = FALSE, message = FALSE}
+``` {r, eval=F, warning = FALSE, message = FALSE}
 #Identifying low-quality cells
 stats <- perCellQCMetrics(sce.zeisel, subsets=list(
     Mt=rowData(sce.zeisel)$featureType=="mito"))
@@ -67,7 +67,7 @@ colSums(as.matrix(qc))
 
 It would also be informative to see where the samples that failed QC fall in the distributions of all of our quality markers.
 
-``` {r, warning = FALSE, message = FALSE}
+``` {r, eval=F, warning = FALSE, message = FALSE}
 #Visualizing low-quality cells in distributions
 unfiltered <- sce.zeisel
 colData(unfiltered) <- cbind(colData(unfiltered), stats)
@@ -124,11 +124,11 @@ The simplest approach is to use library size as a scaling factor for each cell. 
 
 Sometimes unbalanced differential expression exists between samples, which results in composition biases in the dataset. Library size normalization can result in the non-differentially-expressed genes falsely appearing to be downregulated in one cell compared to another. If this sounds familiar, it's because this topic has been well-studied for bulk RNA-seq analysis.Several bulk normalization methods have been created to deal with this problem in bulk RNA-seq analyses. In order to translate these algorithms to scRNA-seq and the large number of zero and low counts, we pool counts from many cells for accurate sizing factor estimation. These estimated sizing factors are then "deconvolved" into cell-based factors. This process is called normalization by deconvolution.
 
-```{r, warning = FALSE, message = FALSE, echo=FALSE}
+```{r, eval=F, warning = FALSE, message = FALSE, echo=FALSE}
 BiocManager::install("scran")
 ```
 
-```{r, warning = FALSE, message = FALSE}
+```{r, eval=F, warning = FALSE, message = FALSE}
 # AnVIL::install("scran")
 library(scran)
 
@@ -152,7 +152,7 @@ QUESTIONS
 
 Once we have calculated scaling factors, we can compute normalized expression values for each sample by dividing the count for each gene by the size factor for the cell. The function we are using also log-transforms these normalized values, which will allow us to calculate log-fold changes in expression (a much more intuitive measure of differential expression!) This lets us focus on contributions from genes with strong relative differences.
 
-```{r, warning = FALSE, message = FALSE}
+```{r, eval=F, warning = FALSE, message = FALSE}
 sce.zeisel.qc <- logNormCounts(sce.zeisel.qc)
 ```
 
@@ -171,7 +171,7 @@ The Zeisel data was generated across multiple plates, so we need to be wary of a
 
 If you work with a dataset that does not contain spike-ins, you would use the `modelGeneVar()` command instead of `modelGeneVarWithSpikes()`.
 
-```{r, warning = FALSE, message = FALSE}
+```{r, eval=F, warning = FALSE, message = FALSE}
 dec.zeisel.qc <- modelGeneVarWithSpikes(sce.zeisel.qc, "ERCC")
 
 plot(dec.zeisel.qc$mean, dec.zeisel.qc$total, pch=16, cex=0.5,
@@ -187,7 +187,7 @@ The expected variance for each log-expression value is plotted in orange. Observ
 
 When choosing the genes for downstream analysis, you will need to balance choosing as many genes as possible (so as not to exclude important biological variation) with limiting the amount of random noise. The most straightforward approach is to simply take the top _n_ genes after ranking based on the biological component of variance. We are creating objects with the top 500, 1000, and 2000 genes, so that we can examine how our choice of _n_ impacts downstream calculations and steps.
 
-```{r, warning = FALSE, message = FALSE}
+```{r, eval=F, warning = FALSE, message = FALSE}
 top500.hvgs <- getTopHVGs(dec.zeisel.qc, n=500)
 top1000.hvgs <- getTopHVGs(dec.zeisel.qc, n=1000)
 top2000.hvgs <- getTopHVGs(dec.zeisel.qc, n=2000)
@@ -208,6 +208,6 @@ QUESTIONS
 
 
 
-```{r}
+```{rwarning = FALSE, message = FALSE, echo=FALSE}
 session_info()
 ```
