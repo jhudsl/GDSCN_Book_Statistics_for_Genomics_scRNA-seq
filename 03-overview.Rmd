@@ -47,22 +47,18 @@ For these exercises, we are using a dataset of cells from a mouse brain from [Ze
 
 This dataset has already had low-quality cells removed prior to publication, but we will still run QC steps to verify that the remaining cells are of good quality.
 
-The dataset is stored as a `SingleCellExperiment` object in the `scRNAseq` package. Here we retrieve the dataset, as well as do a little bit of extra formatting to merge together redundant rows (which are the result of alternative genomic coordinates for the same gene). We also download the Ensembl gene IDs.
+The dataset is stored as a `SingleCellExperiment` object in the `scRNAseq` package. Here we retrieve the dataset, as well as do a little bit of extra formatting to merge together redundant rows (which are the result of alternative genomic coordinates for the same gene). 
 
 ```{r, warning = FALSE, message = FALSE, echo=FALSE}
-BiocManager::install(c("scRNAseq","scater","org.Mm.eg.db","rtracklayer","Rsamtools","Rhtslib"))
+BiocManager::install(c("scRNAseq","scater","org.Mm.eg.db","rtracklayer"))
 ```
 
 ```{r, warning = FALSE, message = FALSE}
-# AnVIL::install(c("scRNAseq", "scater", "org.Mm.eg.db"))
+# AnVIL::install(c("scRNAseq", "scater"))
 library(scRNAseq)
 sce.zeisel <- ZeiselBrainData()
 
 library(scater)
 sce.zeisel <- aggregateAcrossFeatures(sce.zeisel, 
     id=sub("_loc[0-9]+$", "", rownames(sce.zeisel)))
-
-library(org.Mm.eg.db)
-rowData(sce.zeisel)$Ensembl <- mapIds(org.Mm.eg.db, 
-    keys=rownames(sce.zeisel), keytype="SYMBOL", column="ENSEMBL")
 ```
