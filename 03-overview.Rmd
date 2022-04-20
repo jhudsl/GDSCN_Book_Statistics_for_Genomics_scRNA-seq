@@ -50,7 +50,8 @@ This dataset has already had low-quality cells removed prior to publication, but
 The dataset is stored as a `SingleCellExperiment` object in the `scRNAseq` package. Here we retrieve the dataset, as well as do a little bit of extra formatting to merge together redundant rows (which are the result of alternative genomic coordinates for the same gene). 
 
 ```{r, warning = FALSE, message = FALSE, echo=FALSE}
-BiocManager::install(c("Rhtslib","ensembldb","Rsamtools","rtracklayer","scRNAseq","scater"))
+BiocManager::install("Rhtslib")
+BiocManager::install(c("ensembldb","Rsamtools","rtracklayer","scRNAseq","scater"))
 ```
 
 ```{r, warning = FALSE, message = FALSE}
