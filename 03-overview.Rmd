@@ -1,14 +1,14 @@
-# (PART\*) OVERVIEW {-}
+# OVERVIEW
 
-# Scope
+## Scope
 
 There are many programs available for scRNA-seq analysis. In this lesson, we will be using the `scran` and `scater` packages available from Bioconductor. We do not cover .fastq processing, nor do we explore the Seurat and scanpy pipelines.
 
-# Bioconductor reference book
+## Bioconductor reference book
 
 The lessons and activities are adapted from the excellent [Orchestrating Single-Cell Analysis with Bioconductor](https://bioconductor.org/books/release/OSCA/) book by Robert Amezquita, Aaron Lun, Stephanie Hicks, and Raphael Gottardo.
 
-# SingleCellExperiment
+## SingleCellExperiment
 
 Bioconductor stores data from single-cell experiments in a special class (the `SingleCellExperiment` class). The rows in this data class represent features of interest (such as genes, transcripts, or genomic regions), while the columns represent individual cells. This data class is the main data structure used in the `scran` and `scater` packages. In addition to storing count data, it can also store the results of dimensionality reduction methods as well as data for additional, alternative features (like spike-in transcripts).
 
@@ -41,7 +41,7 @@ When we look at the `SingleCellExperiment` object, we can see that information a
 
 For more information on the `SingleCellExperiment` class, take a look at the [vignette](https://www.bioconductor.org/packages/release/bioc/vignettes/SingleCellExperiment/inst/doc/intro.html).
 
-# Obtaining Data
+## Obtaining Data
 
 For these exercises, we are using a dataset of cells from a mouse brain from [Zeisel et al. 2015](https://pubmed.ncbi.nlm.nih.gov/25700174/).This dataset contains about 3000 brain cells of a wide variety of types (such as neurons, glia, and oligodendrocytes). The library was prepared using a UMI-based (unique molecular identifiers) protocol, and the expression data you are working with is UMI counts that have been mapped to each gene.
 

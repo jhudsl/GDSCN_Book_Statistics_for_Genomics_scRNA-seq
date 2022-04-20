@@ -1,10 +1,10 @@
-# (PART\*) DATA CLEANING {-}
+# DATA CLEANING
 
-# Quality control of the library
+## Quality control of the library
 
 Laboratory and technical difficulties during the scRNA-seq data generation can result in poor quality libraries. Before any analysis can be run, the data itself must be checked and cleaned. If these low quality samples are not removed from the data, they can cause issues in the downstream analysis. 
 
-## Visualizing distributions of diagnostic metrics
+### Visualizing distributions of diagnostic metrics
 
 There are several common measures researchers use to determine sample quality in scRNA-seq:
 
@@ -40,7 +40,7 @@ gridExtra::grid.arrange(
 ```
 
 
-## Identifying and removing low-quality cells
+### Identifying and removing low-quality cells
 
 The easiest way to identify low-quality cells is to set a quality threshold and remove any samples that fail to reach it. Some researchers use fixed thresholds, although this approach requires prior knowledge and experience to know what appropriate thresholds might be. We instead can define thresholds based on deviation from the median value of each metric. This approach assumes most of the samples in a dataset are high-quality. Deviation in this case is defined as the median absolute deviation (MAD). Samples are considered outliers if any of the following are true: 
 
@@ -114,11 +114,11 @@ Some researchers mark the suspected low-quality cells instead of removing them f
 :::
 
 
-# Normalization
+## Normalization
 
 Single-cell RNA-seq libraries often vary in sequence coverage due to technical differences in cDNA capture or PCR amplification. We use normalization to correct for these differences. 
 
-## Calculating scaling factors
+### Calculating scaling factors
 
 The simplest approach is to use library size as a scaling factor for each cell. One assumption underlying the library size normalization method is that library size is an unbiased estimate of capture or amplification issues. While this assumption is not necessarily biologically realistic, in practice the accuracy of the normalization step is unlikely to cause issues in exploratory scRNA-seq analyses.
 
@@ -148,7 +148,7 @@ QUESTIONS
 1. How do the scaling factors using library size normalization compare to the scaling factors using deconvolution normalization?
 :::
 
-## Applying scaling factors and computing normalized expression values
+### Applying scaling factors and computing normalized expression values
 
 Once we have calculated scaling factors, we can compute normalized expression values for each sample by dividing the count for each gene by the size factor for the cell. The function we are using also log-transforms these normalized values, which will allow us to calculate log-fold changes in expression (a much more intuitive measure of differential expression!) This lets us focus on contributions from genes with strong relative differences.
 
@@ -157,13 +157,13 @@ sce.zeisel.qc <- logNormCounts(sce.zeisel.qc)
 ```
 
 
-# Choosing features for the analysis
+## Choosing features for the analysis
 
 The goal with many scRNA-seq analyses is to identify differences in gene expression across multiple cell types; in order to do this, cells are clustered together into groups based on a single similarity (or dissimilarity) value between a pair of cells. Which genes you choose to include in the calculation of the similarity metric can greatly influence your downstream analyses.
 
 In general, you will choose to include those genes with the greatest variability in gene expression across all the samples. The underlying assumption is this increased variability is "true" biological variation as opposed to technical noise.
 
-## Examining per-gene variation
+### Examining per-gene variation
 
 We can calculate the per-gene variation across all samples using the variance of the log-normalized expression values you computed in the Normalization section. Because we are using a log-transformation, the total variance of a gene is partly driven by its abundance (not underlying biological heterogeneity). To correct for this relationship, we use a model that calculates the expected amount of variation for each abundance value. We then use the difference between the observed variation and the expected variation for each gene to identify highly-variable genes while controlling for cell abundance. 
 
@@ -183,7 +183,7 @@ curve(curfit$trend(x), col='dodgerblue', add=TRUE, lwd=2)
 
 The expected variance for each log-expression value is plotted in orange. Observed values (the black points) much higher than this trend line will be used for downstream analyses.
 
-## Selecting highly variable genes
+### Selecting highly variable genes
 
 When choosing the genes for downstream analysis, you will need to balance choosing as many genes as possible (so as not to exclude important biological variation) with limiting the amount of random noise. The most straightforward approach is to simply take the top _n_ genes after ranking based on the biological component of variance. We are creating objects with the top 500, 1000, and 2000 genes, so that we can examine how our choice of _n_ impacts downstream calculations and steps.
 
