@@ -10,7 +10,7 @@ Each gene in the data represents a different dimension of the data. Reducing the
 
 We first use principal component analysis (PCA), which is a dimensionality reduction method that maximizes the amount of variation captured by each component, or PC. 
 
-It's up to the researcher ri choose how many PCs to use for downstream analyses. More PCs mean that more biological signal is retained in the data, but it also increases the potential for noise. Most analyses will use between 5-20 PCs.
+It's up to the researcher to choose how many PCs to use for downstream analyses. More PCs mean that more biological signal is retained in the data, but it also increases the potential for noise. In our analyses, we will use 50 (the default).
 
 We are also going to examine how the number of genes we choose to keep in our data cleaning step affects the PC choice.
 
@@ -43,7 +43,7 @@ QUESTION
 
 In scRNA-seq analysis, plotting PCs generally does not offer enough resolution to visualize cell clusters. Instead, we rely on additional dimensionality reduction methods that can use non-linear data transformation algorithms. The most common approach is the t-stochastic neighbor embedding (t-SNE) method (Van der Maaten and Hinton 2008). t-SNE maps high-dimensional data in a low-dimensional space in such a way that if two points are close to each other in the final t-SNE plot, those two points were also close to each other in the original high-dimensional plot. (The same does not necessarily hold true for two points that are distant from each other; t-SNE only preserves the relative locations of neighboring clusters and points.)
 
-The t-SNE approach is computationally complex. In practice, we reduce the computational complexity in scRNA-seq analysis by performing t-SNE calculations on the top PCs in a dataset. We also need to set an inital starting seed and the perplexity parameter. This parameter  will determine the resolution of the plot. Lower perplexity values allow for finer resolution of population structure but can also be noisy.  It's a good idea to test multiple perplexity values when running your t-SNE analysis.
+The t-SNE approach is computationally complex. In practice, we reduce the computational complexity in scRNA-seq analysis by performing t-SNE calculations on the top PCs in a dataset. We also need to set an initial starting seed and the perplexity parameter. This parameter  will determine the resolution of the plot. Lower perplexity values allow for finer resolution of population structure but can also be noisy.  It's a good idea to test multiple perplexity values when running your t-SNE analysis.
 
 We're going to use the PCs calculated using the top 1000 highly-variable genes (a common threshold) for the rest of the analyses.
 
