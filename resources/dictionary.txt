@@ -8,6 +8,7 @@ Datatrail
 DataTrail
 deconvolution
 deconvolved
+der
 downregulated
 dropdown
 Ensembl
@@ -26,6 +27,7 @@ Leanpub
 Lun
 MADs
 Markua
+Maaten
 mentorship
 NCI
 NHGRI
@@ -37,8 +39,10 @@ scanpy
 scRNA
 scRNAseq
 SingleCellExperiment
+SNE
 UE
 UE5
+UMAP
 UMI
 reproducibility
 underserved
