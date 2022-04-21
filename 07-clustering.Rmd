@@ -1,0 +1,124 @@
+# (PART\*) CLUSTERING {-}
+
+At this point we have a big matrix of count data for thousands of cells. In order to explore the data, we need to summarize it in a way more easily interpreted by the human brain. Generally, this involves plotting our high-dimensional data in a two dimensional space and identifying clusters of cells with similar expression profiles. Dimensionality reduction is possible because so many genes have correlated expression because they are involved in the same biological processes.
+
+# Dimensionality reduction
+
+Each gene in the data represents a different dimension of the data. Reducing the number of dimensions in our data has multiple benefits, including reducing the computational work needed for downstream analyses. It also reduces the noise in the data through averaging the signal across multiple genes.  
+
+## Calculating and choosing PCs
+
+We first use principal component analysis (PCA), which is a dimensionality reduction method that maximizes the amount of variation captured by each component, or PC. 
+
+It's up to the researcher ri choose how many PCs to use for downstream analyses. More PCs mean that more biological signal is retained in the data, but it also increases the potential for noise. Most analyses will use between 5-20 PCs.
+
+We are also going to examine how the number of genes we choose to keep in our data cleaning step affects the PC choice.
+
+```{r, eval=F, warning = FALSE, message = FALSE}
+library(scran)
+
+set.seed(100)
+sce.zeisel.PCA_500 <- fixedPCA(sce.zeisel.qc, subset.row=top500.hvgs)
+sce.zeisel.PCA.1000 <- fixedPCA(sce.zeisel.qc, subset.row=top1000.hvgs)
+sce.zeisel.PCA.2000 <- fixedPCA(sce.zeisel.qc, subset.row=top2000.hvgs)
+
+#looking at the variance explained by PCs when keeping different numbers of top genes
+percent.var500 <- attr(reducedDim(sce.zeisel.PCA.500), "percentVar")
+plot(percent.var500, log="y", xlab="PC", ylab="Variance explained (%)", main="Top 500 genes")
+
+percent.var1000 <- attr(reducedDim(sce.zeisel.PCA.1000), "percentVar")
+plot(percent.var1000, log="y", xlab="PC", ylab="Variance explained (%)", main="Top 1000 genes")
+
+percent.var2000 <- attr(reducedDim(sce.zeisel.PCA.2000), "percentVar")
+plot(percent.var2000, log="y", xlab="PC", ylab="Variance explained (%)", main="Top 2000 genes")
+```
+
+
+::: {.fyi}
+QUESTION
+1. How does including more genes affect the percentage of variation explained by the first few PCs?
+:::
+
+## Applying non-linear visualization methods to PCs
+
+In scRNA-seq analysis, plotting PCs generally does not offer enough resolution to visualize cell clusters. Instead, we rely on additional dimensionality reduction methods that can use non-linear data transformation algorithms. The most common approach is the t-stochastic neighbor embedding (t-SNE) method (Van der Maaten and Hinton 2008). t-SNE maps high-dimensional data in a low-dimensional space in such a way that if two points are close to each other in the final t-SNE plot, those two points were also close to each other in the original high-dimensional plot. (The same does not necessarily hold true for two points that are distant from each other; t-SNE only preserves the relative locations of neighboring clusters and points.)
+
+The t-SNE approach is computationally complex. In practice, we reduce the computational complexity in scRNA-seq analysis by performing t-SNE calculations on the top PCs in a dataset. We also need to set an inital starting seed and the perplexity parameter. This parameter  will determine the resolution of the plot. Lower perplexity values allow for finer resolution of population structure but can also be noisy.  It's a good idea to test multiple perplexity values when running your t-SNE analysis.
+
+We're going to use the PCs calculated using the top 1000 highly-variable genes (a common threshold) for the rest of the analyses.
+
+```{r, eval=F, warning = FALSE, message = FALSE}
+library(BiocSingular)
+
+set.seed(100)
+sce.zeisel.tsne5 <- runTSNE(sce.zeisel.PCA.1000, dimred="PCA", perplexity=5)
+out5 <- plotReducedDim(sce.zeisel.tsne5, dimred="TSNE",
+    colour_by="level1class") + ggtitle("perplexity = 5")
+
+set.seed(100)
+sce.zeisel.tsne20 <- runTSNE(sce.zeisel.PCA.1000, dimred="PCA", perplexity=20)
+out20 <- plotReducedDim(sce.zeisel.tsne20, dimred="TSNE",
+    colour_by="level1class") + ggtitle("perplexity = 20")
+
+set.seed(100)
+sce.zeisel.tsne80 <- runTSNE(sce.zeisel.PCA.1000, dimred="PCA", perplexity=80)
+out80 <- plotReducedDim(sce.zeisel.tsne80, dimred="TSNE", 
+    colour_by="level1class") + ggtitle("perplexity = 80")
+
+gridExtra::grid.arrange(out5, out20, out80, ncol=3)
+```
+
+Some researchers will use a different method for the non-linear visualization step in their analysis. This algorithm, called uniform manifold approximation and projection (UMAP), is faster and preserves more of the global data structure when reducing dimensions compared to t-SNE. As a result, though, the resolution within each cluster is reduced. UMAP is becoming the method of choice as scRNA-seq datasets become larger and larger.
+
+```{r, eval=F, warning = FALSE, message = FALSE}
+set.seed(1100101001)
+sce.zeisel.umap <- runUMAP(sce.zeisel.PCA.1000, dimred="PCA")
+out.umap <- plotReducedDim(sce.zeisel.umap, dimred="UMAP", colour_by="level1class") + ggtitle("UMAP")
+
+gridExtra::grid.arrange(out20, out.umap, ncol=2)
+```
+
+::: {.fyi}
+QUESTIONS
+1. How does changing the perplexity parameter affect the t-SNE plot?
+
+3. How does the t-SNE plot compare to the UMAP plot?
+:::
+
+# Clustering
+
+At its core, clustering is a tool that allows us to examine structure and patterns in our data. There isn't really a "true" answer to how the data should be clustered. Instead, we can change the algorithms and parameters to explore a variety of possibilities that work best for each dataset and question the researcher is trying to answer. 
+
+## Clustering using graph-based methods
+
+Graph-based clustering is based on identifying the nearest neighbors of each cell in high-dimensional space. The connections between a cell and its neighbors (called edges) are weighted based on the similarity of the two cells connected. An edge is assigned a higher weight if the two cells it connects are more closely related. After all cells have been connected to their neighbors, we apply an algorithm to identify clusters, or communities, or related cells. Each cell within a community will be more closely related to any cell within the same community than to cells outside the community.
+
+Graph-based clustering scales easily, because it only used a _k_-nearest neighbor search. These searches run more quickly than other methods (like hierarchical clustering). Unfortunately, no information is retained about relationships beyond the neighboring cells. This effect also means that clustering resolution depends on cell density.
+
+```{r, eval=F, warning = FALSE, message = FALSE}
+snn.gr <- buildSNNGraph(sce.zeisel.PCA.1000, use.dimred="PCA")
+
+colLabels(sce.zeisel.PCA.1000) <- factor(igraph::cluster_walktrap(snn.gr)$membership)
+
+table(colLabels(sce.zeisel.PCA.1000))
+```
+
+We assigned the cluster assignments back into our `SingleCellExperiment` object as a factor in the column metadata, which allows us to visualize the cluster assignment on a t-SNE plot.
+
+```{r, eval=F, warning = FALSE, message = FALSE}
+plotTSNE(sce.zeisel.PCA.1000, colour_by="label")
+```
+
+## Clustering using hierarchical methods
+
+Hierarchical clustering is one of the oldest clustering methods. Cells are arranged in a hierarchy based on how similar they are to each other. Basically, a starting cell is chosen and clustered with the sample it is most similar to. Similar small clusters are joined together into larger clusters, until all samples belong to one cluster.
+
+This method is slow, but produces a figure called a dendrogram that can be useful as a visual representation when cells have descended from a recent common ancestor. However, it is generally only use nowadays on the smallest scRNA-seq datasets.
+
+::: {.fyi}
+QUESTIONS
+1. How many clusters were identified using graph-based clustering?:::
+
+```{r, eval=F, warning = FALSE, message = FALSE, echo=FALSE}
+session_info()
+```
