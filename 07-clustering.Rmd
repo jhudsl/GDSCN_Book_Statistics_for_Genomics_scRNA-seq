@@ -92,6 +92,11 @@ gridExtra::grid.arrange(out5, out20, out80, ncol=3)
 
 Some researchers will use a different method for the non-linear visualization step in their analysis. This algorithm, called uniform manifold approximation and projection (UMAP), is faster and preserves more of the global data structure when reducing dimensions compared to t-SNE. As a result, though, the resolution within each cluster is reduced. UMAP is becoming the method of choice as scRNA-seq datasets become larger and larger.
 
+```{r, warning = FALSE, message = FALSE, echo=FALSE}
+install.packages("uwot")
+library(uwot)
+```
+
 ```{r, warning = FALSE, message = FALSE}
 set.seed(1100101001)
 sce.zeisel.umap <- runUMAP(sce.zeisel.PCA.1000, dimred="PCA")
