@@ -7,6 +7,12 @@ on:
       render-type:
         required: true
         type: string
+      repository:
+        type: string
+        required: true
+    secrets:
+      gh_pat:
+        required: true
 
 jobs:
   gather-anvil-repos:
@@ -20,6 +26,7 @@ jobs:
         uses: actions/checkout@v2
         with:
           fetch-depth: 0
+          token: ${{ secrets.gh_pat }}
 
       - name: Configure git
         run: |
@@ -35,7 +42,7 @@ jobs:
           git checkout $branch_name
           git merge -s recursive --strategy-option=theirs origin/${{ github.head_ref }} --allow-unrelated-histories
         shell: bash
-        
+
       - name: Checkout if main
         if: ${{ inputs.render-type == 'main' }}
         run: |
@@ -46,11 +53,9 @@ jobs:
       - name: Run AnVIL repo check
         id: anvil_repos
         env:
-          GH_PAT: ${{ secrets.GITHUB_TOKEN }}
+          GH_PAT: ${{ secrets.gh_pat }}
         run: |
           sudo apt-get install libcurl4-openssl-dev
-          
-          rm resources/AnVIL_repos.tsv
 
           # Run repo check script
           Rscript --vanilla "scripts/anvil_repo_check.R" --git_pat "$GH_PAT"
@@ -65,13 +70,12 @@ jobs:
       - name: Commit AnVIL Repos file to main
         if: ${{ inputs.render-type == 'main' }}
         env:
-          GH_PAT: ${{ secrets.GH_PAT }}
+          GH_PAT: ${{ secrets.gh_pat }}
         run: |
-          git remote set-url origin https://${GH_PAT}@github.com/${GITHUB_REPOSITORY}
           git add --force resources/AnVIL_repos.tsv
           git commit -m 'add AnVIL repos' || echo "No changes to commit"
           git pull --allow-unrelated-histories --strategy-option=ours
-          git push origin main || echo "No changes to push"
+          git push -u origin main || echo "No changes to push"
 
       - name: Commit AnVIL Repos file to preview
         if: ${{ inputs.render-type == 'preview' }}
