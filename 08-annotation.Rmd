@@ -14,7 +14,10 @@ We begin by comparing each pair of clusters and calculating scores for expressio
 
 ```{r, warning = FALSE, message = FALSE, echo=FALSE}
 library(scRNAseq)
+library(scater)
+library(scran)
 sce.zeisel <- ZeiselBrainData()
+sce.zeisel <- aggregateAcrossFeatures(sce.zeisel, id=sub("_loc[0-9]+$", "", rownames(sce.zeisel)))
 stats <- perCellQCMetrics(sce.zeisel, subsets=list(
     Mt=rowData(sce.zeisel)$featureType=="mito"))
 qc <- quickPerCellQC(stats, percent_subsets=c("altexps_ERCC_percent", 
@@ -114,7 +117,6 @@ This dataset has grouped the individual cells into 7 different categories of neu
 BiocManager::install("GSEABase")
 BiocManager::install("AUCell")
 library(scRNAseq)
-sce.zeisel <- ZeiselBrainData()
 ```
 
 ```{r, warning = FALSE, message = FALSE}
@@ -155,5 +157,5 @@ QUESTION
 :::
 
 ```{r, warning = FALSE, message = FALSE}
-session_info()
+sessionInfo()
 ```
