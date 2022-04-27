@@ -30,13 +30,10 @@ sce.zeisel <- aggregateAcrossFeatures(sce.zeisel,
     id=sub("_loc[0-9]+$", "", rownames(sce.zeisel)))
 
 #gridExtra::grid.arrange(
-    plotColData(sce.zeisel, y="sum") +
-        scale_y_log10() + ggtitle("Total count")
-    plotColData(sce.zeisel, y="detected") + 
-        scale_y_log10() + ggtitle("Detected features")
-    plotColData(sce.zeisel, y="altexps_ERCC_percent") + ggtitle("ERCC percent")
-    plotColData(sce.zeisel, y="subsets_Mt_percent") +   ggtitle("Mito percent")
-    ncol=2
+    #plotColData(sce.zeisel, y="sum") + scale_y_log10() + ggtitle("Total count")
+    #plotColData(sce.zeisel, y="detected") + scale_y_log10() + ggtitle("Detected features")
+    #plotColData(sce.zeisel, y="altexps_ERCC_percent") + ggtitle("ERCC percent")
+    #plotColData(sce.zeisel, y="subsets_Mt_percent") +   ggtitle("Mito percent")
 ```
 
 
