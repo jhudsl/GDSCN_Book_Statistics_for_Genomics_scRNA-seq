@@ -202,5 +202,5 @@ QUESTIONS
 
 
 ```{r, warning = FALSE, message = FALSE}
-#session_info()
+sessionInfo()
 ```
