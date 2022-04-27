@@ -29,7 +29,7 @@ library(scater)
 sce.zeisel <- aggregateAcrossFeatures(sce.zeisel, 
     id=sub("_loc[0-9]+$", "", rownames(sce.zeisel)))
 
-gridExtra::grid.arrange(
+#gridExtra::grid.arrange(
     plotColData(sce.zeisel, y="sum") +
         scale_y_log10() + ggtitle("Total count"),
     plotColData(sce.zeisel, y="detected") +
