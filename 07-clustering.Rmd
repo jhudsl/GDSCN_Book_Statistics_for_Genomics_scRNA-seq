@@ -15,8 +15,12 @@ It's up to the researcher to choose how many PCs to use for downstream analyses.
 We are also going to examine how the number of genes we choose to keep in our data cleaning step affects the PC choice.
 
 ```{r, warning = FALSE, message = FALSE, echo=FALSE}
+BiocManager::install("scuttle")
 library(scRNAseq)
+library(scater)
+library(scran)
 sce.zeisel <- ZeiselBrainData()
+sce.zeisel <- aggregateAcrossFeatures(sce.zeisel, id=sub("_loc[0-9]+$", "", rownames(sce.zeisel)))
 stats <- perCellQCMetrics(sce.zeisel, subsets=list(
     Mt=rowData(sce.zeisel)$featureType=="mito"))
 qc <- quickPerCellQC(stats, percent_subsets=c("altexps_ERCC_percent", 
@@ -138,5 +142,5 @@ QUESTIONS
 1. How many clusters were identified using graph-based clustering?:::
 
 ```{r,warning = FALSE, message = FALSE}
-session_info()
+sessionInfo()
 ```
