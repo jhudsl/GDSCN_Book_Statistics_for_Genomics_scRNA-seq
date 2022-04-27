@@ -12,6 +12,24 @@ Thanks to previous research, we know many _marker genes_, or genes can be used t
 
 We begin by comparing each pair of clusters and calculating scores for expression differences between the two for each gene.
 
+```{r, warning = FALSE, message = FALSE, echo=FALSE}
+library(scRNAseq)
+sce.zeisel <- ZeiselBrainData()
+stats <- perCellQCMetrics(sce.zeisel, subsets=list(
+    Mt=rowData(sce.zeisel)$featureType=="mito"))
+qc <- quickPerCellQC(stats, percent_subsets=c("altexps_ERCC_percent", 
+    "subsets_Mt_percent"))
+sce.zeisel.qc <- sce.zeisel[,!qc$discard]
+set.seed(1000)
+clusters <- quickCluster(sce.zeisel.qc)
+sce.zeisel.qc <- computeSumFactors(sce.zeisel.qc, cluster=clusters) 
+sce.zeisel.qc <- logNormCounts(sce.zeisel.qc)
+dec.zeisel.qc <- modelGeneVarWithSpikes(sce.zeisel.qc, "ERCC")
+top1000.hvgs <- getTopHVGs(dec.zeisel.qc, n=1000)
+sce.zeisel.PCA.1000 <- fixedPCA(sce.zeisel.qc, subset.row=top1000.hvgs)
+sce.zeisel.tsne20 <- runTSNE(sce.zeisel.PCA.1000, dimred="PCA", perplexity=20)
+```
+
 ```{r, warning = FALSE, message = FALSE}
 marker.info <- scoreMarkers(sce.zeisel.PCA.1000, colLabels(sce.zeisel.PCA.1000))
 

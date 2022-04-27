@@ -19,7 +19,8 @@ Some experiments will use other metrics for quality control, such as RNA spike-i
 It is always a good idea to plot any metrics you're using as indicators of sample quality as the first step.
 
 ```{r, warning = FALSE, message = FALSE, echo=FALSE}
-BiocManager::install("scater")
+library(scRNAseq)
+sce.zeisel <- ZeiselBrainData()
 ```
 
 ```{r, warning = FALSE, message = FALSE}
@@ -123,10 +124,6 @@ Single-cell RNA-seq libraries often vary in sequence coverage due to technical d
 The simplest approach is to use library size as a scaling factor for each cell. One assumption underlying the library size normalization method is that library size is an unbiased estimate of capture or amplification issues. While this assumption is not necessarily biologically realistic, in practice the accuracy of the normalization step is unlikely to cause issues in exploratory scRNA-seq analyses.
 
 Sometimes unbalanced differential expression exists between samples, which results in composition biases in the dataset. Library size normalization can result in the non-differentially-expressed genes falsely appearing to be downregulated in one cell compared to another. If this sounds familiar, it's because this topic has been well-studied for bulk RNA-seq analysis.Several bulk normalization methods have been created to deal with this problem in bulk RNA-seq analyses. In order to translate these algorithms to scRNA-seq and the large number of zero and low counts, we pool counts from many cells for accurate sizing factor estimation. These estimated sizing factors are then "deconvolved" into cell-based factors. This process is called normalization by deconvolution.
-
-```{r, warning = FALSE, message = FALSE, echo=FALSE}
-BiocManager::install("scran")
-```
 
 ```{r, warning = FALSE, message = FALSE}
 # AnVIL::install("scran")
