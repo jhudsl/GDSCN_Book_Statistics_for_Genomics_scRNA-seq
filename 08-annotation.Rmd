@@ -78,7 +78,7 @@ Unless you are already an expert in neuronal cell expression, you probably didn'
 
 ## Annotating cell types
 
-There are three basic strategies for annotating datasets: match the expression profile of each individual cell to the expression profile of cells from a reference dataset (the reference dataset approach); identify sets of marker genes highly expressed in each cell and match to gene sets from known cell types (the gene set approach); or  perform a gene-set enrichment analysis on the marker genes that define each cluster. 
+There are three basic strategies for annotating datasets: match the expression profile of each individual cell to the expression profile of cells from a reference dataset (the reference dataset approach); identify sets of marker genes highly expressed in each cell and match to gene sets from known cell types (the gene set approach); or perform a gene-set enrichment analysis on the marker genes that define each cluster. 
 
 The Zeisel dataset we have been working with has actually been annotated all this time.
 
@@ -101,7 +101,7 @@ BiocManager::install("AUCell")
 sce.tasic <- TasicBrainData()
 ```
 
-We first create the gene set lists using the `GSEABase` package. The `AUCell` package identifies and ranks marker sets highly expressed in each cell using an area under the curve (AUC) approach. We can assign cell type identity in the Tasic datset by taking the marker set with the highest AUC as the label for the cell.
+We first create the gene set lists using the `GSEABase` package. The `AUCell` package identifies and ranks marker sets highly expressed in each cell using an area under the curve (AUC) approach. We can assign cell type identity in the Tasic dataset by taking the marker set with the highest AUC as the label for the cell.
 
 ```{r, warning = FALSE, message = FALSE}
 # AnVIL::install("GSEABase")
