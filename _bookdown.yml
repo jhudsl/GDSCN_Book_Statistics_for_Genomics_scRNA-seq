@@ -5,7 +5,7 @@ rmd_files: ["index.Rmd",
             "03-overview.Rmd",
             "06-data-cleaning.Rmd",
             "07-clustering.Rmd",
-            "08-annotation.Rmd"
+            "08-annotation.Rmd",
             "About.Rmd",
             "References.Rmd"]
 new_session: yes
