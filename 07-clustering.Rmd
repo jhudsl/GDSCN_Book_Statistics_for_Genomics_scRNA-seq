@@ -14,7 +14,7 @@ It's up to the researcher to choose how many PCs to use for downstream analyses.
 
 We are also going to examine how the number of genes we choose to keep in our data cleaning step affects the PC choice.
 
-```{r, eval=F, warning = FALSE, message = FALSE}
+```{r, warning = FALSE, message = FALSE}
 library(scran)
 
 set.seed(100)
@@ -47,7 +47,7 @@ The t-SNE approach is computationally complex. In practice, we reduce the comput
 
 We're going to use the PCs calculated using the top 1000 highly-variable genes (a common threshold) for the rest of the analyses.
 
-```{r, eval=F, warning = FALSE, message = FALSE}
+```{r, warning = FALSE, message = FALSE}
 library(BiocSingular)
 
 set.seed(100)
@@ -70,7 +70,7 @@ gridExtra::grid.arrange(out5, out20, out80, ncol=3)
 
 Some researchers will use a different method for the non-linear visualization step in their analysis. This algorithm, called uniform manifold approximation and projection (UMAP), is faster and preserves more of the global data structure when reducing dimensions compared to t-SNE. As a result, though, the resolution within each cluster is reduced. UMAP is becoming the method of choice as scRNA-seq datasets become larger and larger.
 
-```{r, eval=F, warning = FALSE, message = FALSE}
+```{r, warning = FALSE, message = FALSE}
 set.seed(1100101001)
 sce.zeisel.umap <- runUMAP(sce.zeisel.PCA.1000, dimred="PCA")
 out.umap <- plotReducedDim(sce.zeisel.umap, dimred="UMAP", colour_by="level1class") + ggtitle("UMAP")
@@ -95,7 +95,7 @@ Graph-based clustering is based on identifying the nearest neighbors of each cel
 
 Graph-based clustering scales easily, because it only used a _k_-nearest neighbor search. These searches run more quickly than other methods (like hierarchical clustering). Unfortunately, no information is retained about relationships beyond the neighboring cells. This effect also means that clustering resolution depends on cell density.
 
-```{r, eval=F, warning = FALSE, message = FALSE}
+```{r, warning = FALSE, message = FALSE}
 snn.gr <- buildSNNGraph(sce.zeisel.PCA.1000, use.dimred="PCA")
 
 colLabels(sce.zeisel.PCA.1000) <- factor(igraph::cluster_walktrap(snn.gr)$membership)
@@ -105,7 +105,7 @@ table(colLabels(sce.zeisel.PCA.1000))
 
 We assigned the cluster assignments back into our `SingleCellExperiment` object as a factor in the column metadata, which allows us to visualize the cluster assignment on a t-SNE plot.
 
-```{r, eval=F, warning = FALSE, message = FALSE}
+```{r, warning = FALSE, message = FALSE}
 plotTSNE(sce.zeisel.PCA.1000, colour_by="label")
 ```
 
@@ -119,6 +119,6 @@ This method is slow, but produces a figure called a dendrogram that can be usefu
 QUESTIONS
 1. How many clusters were identified using graph-based clustering?:::
 
-```{r, eval=F, warning = FALSE, message = FALSE, echo=FALSE}
+```{r,warning = FALSE, message = FALSE}
 session_info()
 ```

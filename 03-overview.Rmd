@@ -14,11 +14,6 @@ Bioconductor stores data from single-cell experiments in a special class (the `S
 
 `SingleCellExperiment` objects are created using a command of the same name.
 
-```{r, warning = FALSE, message = FALSE, echo=FALSE}
-install.packages("https://cran.r-project.org/src/contrib/matrixStats_0.61.0.tar.gz", repo=NULL, type="source")
-BiocManager::install(c("SummarizedExperiment","SingleCellExperiment","DelayedArray"))
-```
-
 ```{r, warning = FALSE, message = FALSE}
 # AnVIL::install(c("SingleCellExperiment"))
 library(SingleCellExperiment)
@@ -49,12 +44,8 @@ This dataset has already had low-quality cells removed prior to publication, but
 
 The dataset is stored as a `SingleCellExperiment` object in the `scRNAseq` package. Here we retrieve the dataset, as well as do a little bit of extra formatting to merge together redundant rows (which are the result of alternative genomic coordinates for the same gene). 
 
-```{r, eval=F, warning = FALSE, message = FALSE, echo=FALSE}
-BiocManager::install("Rhtslib")
-BiocManager::install(c("ensembldb","Rsamtools","rtracklayer","scRNAseq","scater"))
-```
 
-```{r, eval=F, warning = FALSE, message = FALSE}
+```{r, warning = FALSE, message = FALSE}
 # AnVIL::install(c("scRNAseq", "scater"))
 library(scRNAseq)
 sce.zeisel <- ZeiselBrainData()
