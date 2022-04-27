@@ -40,7 +40,7 @@ top2000.hvgs <- getTopHVGs(dec.zeisel.qc, n=2000)
 library(scran)
 
 set.seed(100)
-sce.zeisel.PCA_500 <- fixedPCA(sce.zeisel.qc, subset.row=top500.hvgs)
+sce.zeisel.PCA.500 <- fixedPCA(sce.zeisel.qc, subset.row=top500.hvgs)
 sce.zeisel.PCA.1000 <- fixedPCA(sce.zeisel.qc, subset.row=top1000.hvgs)
 sce.zeisel.PCA.2000 <- fixedPCA(sce.zeisel.qc, subset.row=top2000.hvgs)
 
