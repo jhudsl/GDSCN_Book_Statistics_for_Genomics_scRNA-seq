@@ -33,9 +33,11 @@ interneuron
 ITCR
 itcrtraining
 ITN
+KEGG
 fyi
 Leanpub
 Lun
+logFC
 MADs
 Markua
 Maaten
@@ -51,6 +53,7 @@ scanpy
 scRNA
 scRNAseq
 SingleCellExperiment
+Slc
 Slc6a1
 subtypes
 SNE
