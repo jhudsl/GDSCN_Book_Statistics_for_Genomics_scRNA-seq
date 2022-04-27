@@ -10,7 +10,7 @@ Thanks to previous research, we know many _marker genes_, or genes can be used t
 
 ## Calculating and ranking effect size summary statistics
 
-We begin by comparing each pair of clusters and calculating scores for expression differences between the two for each gene.
+We begin by comparing each pair of clusters and calculating scores for expression differences between the two for each gene. We have multiple options for the statistics used to compare expression values.
 
 ```{r, warning = FALSE, message = FALSE, echo=FALSE}
 library(scRNAseq)
@@ -32,13 +32,6 @@ top1000.hvgs <- getTopHVGs(dec.zeisel.qc, n=1000)
 sce.zeisel.PCA.1000 <- fixedPCA(sce.zeisel.qc, subset.row=top1000.hvgs)
 sce.zeisel.tsne20 <- runTSNE(sce.zeisel.PCA.1000, dimred="PCA", perplexity=20)
 ```
-
-```{r, warning = FALSE, message = FALSE}
-marker.info <- scoreMarkers(sce.zeisel.PCA.1000, colLabels(sce.zeisel.PCA.1000))
-names(marker.info)
-```
-
-The `scoreMarkers` command calculates pairwise comparisons for a lot of statistics. We can rank the candidate marker genes by any of them. The `scoreMarkers` function focuses on the underlying effect sizes and ignores p-values altogether. 
 
   * **AUC** (area under the curve) is the probability that a randomly chosen observation from cluster A is greater than a randomly chosen observation from cluster B. This statistic is a way to quantify how well we can distinguish between two distributions (clusters) in a pairwise comparison. An AUC of 1 means all values in cluster A are greater than any value from cluster B and suggests upregulation. An AUC of of 0.5 means the two clusters are indistinguishable from each other, while an AUC of 0 suggests the marker gene observations in cluster A are downregulated compared to those in cluster B. 
   
