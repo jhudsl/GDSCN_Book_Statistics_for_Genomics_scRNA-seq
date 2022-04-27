@@ -1,0 +1,139 @@
+# (PART\*) ANNOTATION {-}
+
+We have managed to identify clusters of related cells in the data. However, these clusters aren't very useful until we can identify the biology meaning of each group. This is where functional annotation comes in.
+
+The real art, and the greatest challenge, in an scRNA-seq analysis comes when interpreting the results. Up to this point (cleaning and clustering the data), the analysis and computation has been straightforward. Figuring out the biological state that each cluster represents, on the other hand, is more difficult, as it requires applying prior biological knowledge to the dataset. 
+
+# Marker gene detection
+
+Thanks to previous research, we know many _marker genes_, or genes can be used to identify particular cell types. These genes are differentially expressed across cell types, and by examining the expression profiles of multiple marker genes across all the clusters, we can assign particular cell type identities to each cluster. 
+
+## Calculating and ranking effect size summary statistics
+
+We begin by comparing each pair of clusters and calculating scores for expression differences between the two for each gene.
+
+```{r, warning = FALSE, message = FALSE}
+marker.info <- scoreMarkers(sce.zeisel.PCA.1000, colLabels(sce.zeisel.PCA.1000))
+
+colnames(marker.info[["1"]])
+```
+
+The `scoreMarkers` command calculates pairwise comparisons for a lot of statistics. We can rank the candidate marker genes by any of them. The `scoreMarkers` function focuses on the underlying effect sizes and ignores p-values altogether. 
+
+  * **AUC** (area under the curve) is the probability that a randomly chosen observation from cluster A is greater than a randomly chosen observation from cluster B. This statistic is a way to quantify how well we can distinguish between two distributions (clusters) in a pairwise comparison. An AUC of 1 means all values in cluster A are greater than any value from cluster B and suggests upregulation. An AUC of of 0.5 means the two clusters are indistinguishable from each other, while an AUC of 0 suggests the marker gene observations in cluster A are downregulated compared to those in cluster B. 
+  
+  * **Cohen's _d_** is a standardized log-fold change, and can be thought of as the number of standard deviations that separate the two groups. Positive values of Cohen's _d_ suggest that our cluster of interest (cluster A) are upregulated compared to cluster B, while negative values suggest the marker gene observations in cluster A are downregulated compared to cluster B.
+  
+  * **log-fold change (logFC)** is a measure of whether there is a difference in expression between clusters. Keep in mind that these values ignore the magnitude of the change. As with the others, positive values indicate upregulation in the cluster of interest (cluster A), while negative values indicate downregulation.
+
+For each of these statistics, `scoreMarkers` calculates mean, median, minimum value (min), maximum value (max), and minimum rank (rank; the smallest rank of each gene across all pairwise comparisons). For most of these measures, a larger number indicates upregulation. For minimum rank, however, a small value means the gene is one of the top upregulated genes.
+
+AUC or Cohen’s _d_ are effective regardless of the magnitude of the expression values and thus are good choices for general marker detection. The log-fold change in the detected proportion is specifically useful for identifying binary changes in expression.
+
+For this exercise, we're going to focus on upregulated markers, since those are particularly useful for identifying cell types in a heterogeneous population like the Zeisel dataset. We use the `findMarkers` command, which quickly identifies potential marker genes.
+
+```{r, warning = FALSE, message = FALSE}
+markers <- findMarkers(sce.zeisel.PCA.100, direction="up")
+marker.set <- markers[["1"]]
+head(marker.set[,1:8], 10) # only first 8 columns, for brevity
+```
+
+This dataframe shows us the in log-fold expression change for each potential marker gene between cluster 1 and every other cluster.
+
+## Comparing gene expression levels across clusters
+
+Once we've identified potential marker genes, we can use a heatmap to compare gene expression in each cell between clusters. 
+
+```{r, warning = FALSE, message = FALSE}
+top.markers <- rownames(marker.set)[marker.set$Top <= 10]
+plotHeatmap(sce.zeisel.PCA.1000, features=top.markers, order_columns_by="label")
+```
+
+In this heatmap, clusters are on the horizontal, while the top upregulated genes in cluster 1 are on the vertical. The magnitude of the log-fold expression change is indicated by color of each cell. 
+
+We can also create a heatmap that shows the mean log-fold change of cluster 1 cells compared to the mean of each other cluster. This can simplify the heatmap and is useful when dealing with many clusters.
+
+```{r, warning = FALSE, message = FALSE, echo=FALSE}
+install.packages("pheatmap")
+```
+
+```{r, warning = FALSE, message = FALSE}
+# AnVIL::install("pheatmap")
+library(pheatmap)
+
+logFCs <- getMarkerEffects(marker.set[1:50,])
+pheatmap(logFCs, breaks=seq(-5, 5, length.out=101))
+```
+
+Here we see that three genes are generally upregulated in Cluster 1 compared to the other clusters: _Gad1_, _Gad2_, and _Slc6a1_. This is where prior biological knowledge comes in handy, as both _Gad1_ and _Slc6a1_ are known interneuron markers (Zeng et al. 2012).
+
+::: {.fyi}
+QUESTION
+1. Are there any groups or patterns you see in the second heatmap that look interesting?
+:::
+
+# Cell type annotation
+
+Unless you are already an expert in neuronal cell expression, you probably didn't know _Gad1_ and _Slc6a1_ are known interneuron markers until you were told. Luckily, we have several high-quality references databases that can be used for annotating scRNA-seq datasets. Some of these references are useful for identifying cell types (the Zeisel dataset we have been using is a well-known reference for identifying neuronal cell types). Others, such as the Gene Ontology (GO) or Kyoto Encyclopedia of Genes and Genomes (KEGG) collections, are useful for identifying biological processes associated with each cluster.
+
+## Annotating cell types
+
+There are three basic strategies for annotating datasets: match the expression profile of each individual cell to the expression profile of cells from a reference dataset (the reference dataset approach); identify sets of marker genes highly expressed in each cell and match to gene sets from known cell types (the gene set approach); or  perform a gene-set enrichment analysis on the marker genes that define each cluster. 
+
+The Zeisel dataset we have been working with has actually been annotated all this time.
+
+```{r, warning = FALSE, message = FALSE}
+wilcox.z <- pairwiseWilcox(sce.zeisel, sce.zeisel$level1class, 
+    lfc=1, direction="up")
+markers.z <- getTopMarkers(wilcox.z$statistics, wilcox.z$pairs,
+    pairwise=FALSE, n=50)
+lengths(markers.z)
+```
+
+This dataset has grouped the individual cells into 7 different categories of neuronal subtypes. We can use the gene sets that define these categories to annotate a second brain scRNA-seq dataset from Tasic et al. (2016). (We will not go through all the data cleaning and clustering steps for this new dataset - having made it this far, we trust you can do that!)
+
+```{r, warning = FALSE, message = FALSE, echo=FALSE}
+BiocManager::install("GSEABase")
+BiocManager::install("AUCell")
+```
+
+```{r, warning = FALSE, message = FALSE}
+sce.tasic <- TasicBrainData()
+```
+
+We first create the gene set lists using the `GSEABase` package. The `AUCell` package identifies and ranks marker sets highly expressed in each cell using an area under the curve (AUC) approach. We can assign cell type identity in the Tasic datset by taking the marker set with the highest AUC as the label for the cell.
+
+```{r, warning = FALSE, message = FALSE}
+# AnVIL::install("GSEABase")
+library(GSEABase)
+all.sets <- lapply(names(markers.z), function(x) {
+    GeneSet(markers.z[[x]], setName=x)        
+})
+all.sets <- GeneSetCollection(all.sets)
+
+# AnVIL::install("AUCell")
+library(AUCell)
+rankings <- AUCell_buildRankings(counts(sce.tasic),
+    plotStats=FALSE, verbose=FALSE)
+cell.aucs <- AUCell_calcAUC(all.sets, rankings)
+results <- t(assay(cell.aucs))
+```
+
+After assigning cell type identities to each cluster, a researcher should always verify that the identities make sense. Since the Tasic dataset has also been annotated, we can compare our annotation to the researcher-provided annotation as a sort of sanity check.
+
+```{r, warning = FALSE, message = FALSE}
+new.labels <- colnames(results)[max.col(results)]
+tab <- table(new.labels, sce.tasic$broad_type)
+tab
+```
+
+As you can see, the labels applied by the researchers and by our annotation mostly match. (Pyramidal SS nerves are primarily glutamatergic, so although the categories are labeled differently, those two categories do indeed match!) The major exception is the oligodendrocyte precursor cells, which our annotation called astrocytes. However, this mismatch isn't as concerning as you might think, once you know that both astrocytes and oligodendrocytes come from the same precursor cell lineage.
+
+::: {.fyi}
+QUESTION
+1. Should we be concerned when 1 or 2 cells are assigned a different cell type identity by our annotation than by the researchers? Why or why not?
+:::
+
+```{r, warning = FALSE, message = FALSE}
+session_info()
+```
