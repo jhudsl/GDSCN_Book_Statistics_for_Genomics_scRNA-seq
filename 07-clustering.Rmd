@@ -74,17 +74,17 @@ library(BiocSingular)
 
 set.seed(100)
 sce.zeisel.tsne5 <- runTSNE(sce.zeisel.PCA.1000, dimred="PCA", perplexity=5)
-out5 <- plotReducedDim(sce.zeisel.tsne5, dimred="TSNE",
+out5 <- plotReducedDim(sce.zeisel.tsne5, dimred="tSNE",
     colour_by="level1class") + ggtitle("perplexity = 5")
 
 set.seed(100)
 sce.zeisel.tsne20 <- runTSNE(sce.zeisel.PCA.1000, dimred="PCA", perplexity=20)
-out20 <- plotReducedDim(sce.zeisel.tsne20, dimred="TSNE",
+out20 <- plotReducedDim(sce.zeisel.tsne20, dimred="tSNE",
     colour_by="level1class") + ggtitle("perplexity = 20")
 
 set.seed(100)
 sce.zeisel.tsne80 <- runTSNE(sce.zeisel.PCA.1000, dimred="PCA", perplexity=80)
-out80 <- plotReducedDim(sce.zeisel.tsne80, dimred="TSNE", 
+out80 <- plotReducedDim(sce.zeisel.tsne80, dimred="tSNE", 
     colour_by="level1class") + ggtitle("perplexity = 80")
 
 gridExtra::grid.arrange(out5, out20, out80, ncol=3)
