@@ -47,7 +47,7 @@ For this exercise, we're going to focus on upregulated markers, since those are 
 
 ```{r, warning = FALSE, message = FALSE}
 markers <- findMarkers(sce.zeisel.PCA.1000, direction="up")
-marker.set <- markers[["1"]]
+marker.set <- markers[[1]]
 head(marker.set, 10)
 ```
 
