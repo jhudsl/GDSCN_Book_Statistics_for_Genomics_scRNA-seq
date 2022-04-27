@@ -35,8 +35,7 @@ sce.zeisel.tsne20 <- runTSNE(sce.zeisel.PCA.1000, dimred="PCA", perplexity=20)
 
 ```{r, warning = FALSE, message = FALSE}
 marker.info <- scoreMarkers(sce.zeisel.PCA.1000, colLabels(sce.zeisel.PCA.1000))
-
-colnames(marker.info[["1"]])
+names(marker.info["1"])
 ```
 
 The `scoreMarkers` command calculates pairwise comparisons for a lot of statistics. We can rank the candidate marker genes by any of them. The `scoreMarkers` function focuses on the underlying effect sizes and ignores p-values altogether. 
