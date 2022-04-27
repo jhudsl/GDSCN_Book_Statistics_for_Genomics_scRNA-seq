@@ -95,6 +95,8 @@ This dataset has grouped the individual cells into 7 different categories of neu
 ```{r, warning = FALSE, message = FALSE, echo=FALSE}
 BiocManager::install("GSEABase")
 BiocManager::install("AUCell")
+library(scRNAseq)
+sce.zeisel <- ZeiselBrainData()
 ```
 
 ```{r, warning = FALSE, message = FALSE}
