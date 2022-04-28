@@ -46,7 +46,7 @@ AUC or Cohen’s _d_ are effective regardless of the magnitude of the expression
 For this exercise, we're going to focus on upregulated markers, since those are particularly useful for identifying cell types in a heterogeneous population like the Zeisel dataset. We use the `findMarkers` command, which quickly identifies potential marker genes.
 
 ```{r, warning = FALSE, message = FALSE}
-markers <- findMarkers(sce.zeisel.PCA.1000, direction="up")
+markers <- findMarkers(sce.zeisel, direction="up")
 #marker.set <- markers[[1]]
 #head(marker.set, 10)
 ```
