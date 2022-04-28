@@ -16,6 +16,7 @@ We begin by comparing each pair of clusters and calculating scores for expressio
 library(scRNAseq)
 library(scater)
 library(scran)
+library(BiocSingular)
 sce.zeisel <- ZeiselBrainData()
 sce.zeisel <- aggregateAcrossFeatures(sce.zeisel, id=sub("_loc[0-9]+$", "", rownames(sce.zeisel)))
 stats <- perCellQCMetrics(sce.zeisel, subsets=list(
@@ -96,7 +97,7 @@ There are three basic strategies for annotating datasets: match the expression p
 The Zeisel dataset we have been working with has actually been annotated all this time.
 
 ```{r, warning = FALSE, message = FALSE}
-wilcox.z <- pairwiseWilcox(sce.zeisel, sce.zeisel$level1class, 
+wilcox.z <- pairwiseWilcox(sce.zeisel.qc, sce.zeisel.qc$level1class, 
     lfc=1, direction="up")
 markers.z <- getTopMarkers(wilcox.z$statistics, wilcox.z$pairs,
     pairwise=FALSE, n=50)
