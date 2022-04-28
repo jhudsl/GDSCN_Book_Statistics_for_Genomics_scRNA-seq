@@ -47,9 +47,9 @@ AUC or Cohen’s _d_ are effective regardless of the magnitude of the expression
 For this exercise, we're going to focus on upregulated markers, since those are particularly useful for identifying cell types in a heterogeneous population like the Zeisel dataset. We use the `findMarkers` command, which quickly identifies potential marker genes.
 
 ```{r, warning = FALSE, message = FALSE}
-markers <- findMarkers(sce.zeisel.qc, direction="up")
-marker.set <- markers[["1"]]
-head(marker.set, 10)
+#markers <- findMarkers(sce.zeisel.qc, direction="up")
+#marker.set <- markers[["1"]]
+#head(marker.set, 10)
 ```
 
 This dataframe shows us the in log-fold expression change for each potential marker gene between cluster 1 and every other cluster.
@@ -59,8 +59,8 @@ This dataframe shows us the in log-fold expression change for each potential mar
 Once we've identified potential marker genes, we can use a heatmap to compare gene expression in each cell between clusters. 
 
 ```{r, warning = FALSE, message = FALSE}
-top.markers <- rownames(marker.set)[marker.set$Top <= 10]
-plotHeatmap(sce.zeisel.PCA.1000, features=top.markers, order_columns_by="label")
+#top.markers <- rownames(marker.set)[marker.set$Top <= 10]
+#plotHeatmap(sce.zeisel.PCA.1000, features=top.markers, order_columns_by="label")
 ```
 
 In this heatmap, clusters are on the horizontal, while the top upregulated genes in cluster 1 are on the vertical. The magnitude of the log-fold expression change is indicated by color of each cell. 
@@ -73,10 +73,10 @@ install.packages("pheatmap")
 
 ```{r, warning = FALSE, message = FALSE}
 # AnVIL::install("pheatmap")
-library(pheatmap)
+#library(pheatmap)
 
-logFCs <- getMarkerEffects(marker.set[1:50,])
-pheatmap(logFCs, breaks=seq(-5, 5, length.out=101))
+#logFCs <- getMarkerEffects(marker.set[1:50,])
+#pheatmap(logFCs, breaks=seq(-5, 5, length.out=101))
 ```
 
 Here we see that three genes are generally upregulated in Cluster 1 compared to the other clusters: _Gad1_, _Gad2_, and _Slc6a1_. This is where prior biological knowledge comes in handy, as both _Gad1_ and _Slc6a1_ are known interneuron markers (Zeng et al. 2012).
