@@ -29,8 +29,8 @@ sce.zeisel.qc <- computeSumFactors(sce.zeisel.qc, cluster=clusters)
 sce.zeisel.qc <- logNormCounts(sce.zeisel.qc)
 dec.zeisel.qc <- modelGeneVarWithSpikes(sce.zeisel.qc, "ERCC")
 top1000.hvgs <- getTopHVGs(dec.zeisel.qc, n=1000)
-sce.zeisel.PCA.1000 <- fixedPCA(sce.zeisel.qc, subset.row=top1000.hvgs)
-sce.zeisel.tsne20 <- runTSNE(sce.zeisel.PCA.1000, dimred="PCA", perplexity=20)
+sce.zeisel.PCA.1000 <- denoisePCA(sce.zeisel.qc, technical=dec.zeisel, subset.row=top1000.hvgs)
+sce.zeisel.tsne20 <- runTSNE(sce.zeisel.PCA.1000, dimred="PCA")
 ```
 
   * **AUC** (area under the curve) is the probability that a randomly chosen observation from cluster A is greater than a randomly chosen observation from cluster B. This statistic is a way to quantify how well we can distinguish between two distributions (clusters) in a pairwise comparison. An AUC of 1 means all values in cluster A are greater than any value from cluster B and suggests upregulation. An AUC of of 0.5 means the two clusters are indistinguishable from each other, while an AUC of 0 suggests the marker gene observations in cluster A are downregulated compared to those in cluster B. 
@@ -46,8 +46,8 @@ AUC or Cohen’s _d_ are effective regardless of the magnitude of the expression
 For this exercise, we're going to focus on upregulated markers, since those are particularly useful for identifying cell types in a heterogeneous population like the Zeisel dataset. We use the `findMarkers` command, which quickly identifies potential marker genes.
 
 ```{r, warning = FALSE, message = FALSE}
-markers <- findMarkers(sce.zeisel, direction="up")
-#marker.set <- markers[[1]]
+markers <- findMarkers(sce.zeisel.PCA.1000, direction="up")
+marker.set <- markers[["1"]]
 #head(marker.set, 10)
 ```
 
