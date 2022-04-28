@@ -29,7 +29,7 @@ sce.zeisel.qc <- computeSumFactors(sce.zeisel.qc, cluster=clusters)
 sce.zeisel.qc <- logNormCounts(sce.zeisel.qc)
 dec.zeisel.qc <- modelGeneVarWithSpikes(sce.zeisel.qc, "ERCC")
 top1000.hvgs <- getTopHVGs(dec.zeisel.qc, n=1000)
-sce.zeisel.PCA.1000 <- denoisePCA(sce.zeisel.qc, technical=dec.zeisel, subset.row=top1000.hvgs)
+sce.zeisel.PCA.1000 <- denoisePCA(sce.zeisel.qc, technical=dec.zeisel.qc, subset.row=top1000.hvgs)
 sce.zeisel.tsne20 <- runTSNE(sce.zeisel.PCA.1000, dimred="PCA")
 ```
 
