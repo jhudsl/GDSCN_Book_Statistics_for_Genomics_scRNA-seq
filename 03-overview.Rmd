@@ -27,7 +27,7 @@ pretend.gene.lengths <- sample(10000, nrow(counts))
 sce <- SingleCellExperiment(list(counts=counts),
     colData = DataFrame(label = pretend.cell.labels),
     rowData = DataFrame(length = pretend.gene.lengths),
-    metadata=list(study="GSE111111")
+    metadata = list(study = "GSE111111")
 )
 sce
 ```
