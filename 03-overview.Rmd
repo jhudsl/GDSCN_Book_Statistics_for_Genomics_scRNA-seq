@@ -45,7 +45,6 @@ The dataset is stored as a `SingleCellExperiment` object in the `scRNAseq` packa
 library(scRNAseq)
 sce.zeisel <- ZeiselBrainData()
 
-library(scater)
-sce.zeisel <- aggregateAcrossFeatures(sce.zeisel, 
-    id=sub("_loc[0-9]+$", "", rownames(sce.zeisel)))
+#library(scater)
+#sce.zeisel <- aggregateAcrossFeatures(sce.zeisel, id=sub("_loc[0-9]+$", "", rownames(sce.zeisel)))
 ```
