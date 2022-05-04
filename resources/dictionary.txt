@@ -8,6 +8,7 @@ astrocytes
 B
 BIPOC
 Bloomberg
+cellular-resolution
 cDNA
 Cohen's
 cortical
@@ -37,6 +38,7 @@ GDSCN
 glia
 glutamatergic
 Gottardo
+H
 heatmap
 hippocampus
 impactful
@@ -48,6 +50,7 @@ J
 Jan
 KEGG
 fyi
+L
 Leanpub
 Learn
 Lun
@@ -72,6 +75,7 @@ PMID
 PMCID
 PMC
 preprint
+QC
 Res
 RNA-seq
 scanpy
@@ -80,6 +84,8 @@ scRNAseq
 SingleCellExperiment
 Slc
 Slc6a1
+single-cell
+species-specific
 subtypes
 SNE
 Tasic
