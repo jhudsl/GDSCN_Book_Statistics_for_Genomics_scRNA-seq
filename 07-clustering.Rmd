@@ -1,18 +1,19 @@
 # (PART\*) CLUSTERING {-}
 
-At this point we have a big matrix of count data for thousands of cells. In order to explore the data, we need to summarize it in a way more easily interpreted by the human brain. Generally, this involves plotting our high-dimensional data in a two dimensional space and identifying clusters of cells with similar expression profiles. Dimensionality reduction is possible because so many genes have correlated expression because they are involved in the same biological processes.
+At this point we have a big matrix of count data for thousands of cells. In order to explore the data, we need to summarize it in a way more easily interpreted by the human brain. Generally, this involves plotting our high-dimensional data in a two dimensional space and identifying clusters of cells with similar expression profiles. 
 
 # Dimensionality reduction
 
-Each gene in the data represents a different dimension of the data. Reducing the number of dimensions in our data has multiple benefits, including reducing the computational work needed for downstream analyses. It also reduces the noise in the data through averaging the signal across multiple genes.  
+Each gene in the data represents a different dimension of the data. Reducing the number of dimensions in our data has multiple benefits, including reducing the computational work needed for downstream analyses. It also reduces the noise in the data through averaging the signal across multiple genes. 
+
+Dimensionality reduction is a very common technique used in data science in general, not just in scRNA-seq analysis. You will find yourself using it over and over whenever you work with high-dimensional data. Dimensionality reduction is possible for genomic expression methods because so many genes have correlated expression. This is a consequence of different genes being involved in the same biological processes.
+ 
 
 ## Calculating and choosing PCs
 
 We first use principal component analysis (PCA), which is a dimensionality reduction method that maximizes the amount of variation captured by each component, or PC. 
 
-It's up to the researcher to choose how many PCs to use for downstream analyses. More PCs mean that more biological signal is retained in the data, but it also increases the potential for noise. In our analyses, we will use 50 (the default).
-
-We are also going to examine how the number of genes we choose to keep in our data cleaning step affects the PC choice.
+It's up to the researcher to choose how many PCs to use for downstream analyses. More PCs mean that more biological signal is retained in the data, but it also increases the potential for noise. In our analyses, we will use 50 (the default). We will also use the top 1000 genes to calculate the PCs.
 
 ```{r, warning = FALSE, message = FALSE, echo=FALSE}
 BiocManager::install("scuttle")
@@ -31,68 +32,61 @@ clusters <- quickCluster(sce.zeisel.qc)
 sce.zeisel.qc <- computeSumFactors(sce.zeisel.qc, cluster=clusters) 
 sce.zeisel.qc <- logNormCounts(sce.zeisel.qc)
 dec.zeisel.qc <- modelGeneVarWithSpikes(sce.zeisel.qc, "ERCC")
-top500.hvgs <- getTopHVGs(dec.zeisel.qc, n=500)
 top1000.hvgs <- getTopHVGs(dec.zeisel.qc, n=1000)
-top2000.hvgs <- getTopHVGs(dec.zeisel.qc, n=2000)
 ```
 
 ```{r, warning = FALSE, message = FALSE}
 library(scran)
 
-set.seed(100)
-sce.zeisel.PCA.500 <- fixedPCA(sce.zeisel.qc, subset.row=top500.hvgs)
-sce.zeisel.PCA.1000 <- fixedPCA(sce.zeisel.qc, subset.row=top1000.hvgs)
-sce.zeisel.PCA.2000 <- fixedPCA(sce.zeisel.qc, subset.row=top2000.hvgs)
+#calculating PCA
+#the denoisePCA command calculates PCs and removes those that primarily capture technical noise
+set.seed(101011001)
+sce.zeisel.PCA.1000 <- denoisePCA(sce.zeisel.qc, technical = dec.zeisel.qc, subset.row = top1000.hvgs, type = "pca") #the technical option tells R where to find information about how much of the variation is attributed to "technical", or non-biological, sources
 
-#looking at the variance explained by PCs when keeping different numbers of top genes
-percent.var500 <- attr(reducedDim(sce.zeisel.PCA.500), "percentVar")
-plot(percent.var500, log="y", xlab="PC", ylab="Variance explained (%)", main="Top 500 genes")
-
-percent.var1000 <- attr(reducedDim(sce.zeisel.PCA.1000), "percentVar")
-plot(percent.var1000, log="y", xlab="PC", ylab="Variance explained (%)", main="Top 1000 genes")
-
-percent.var2000 <- attr(reducedDim(sce.zeisel.PCA.2000), "percentVar")
-plot(percent.var2000, log="y", xlab="PC", ylab="Variance explained (%)", main="Top 2000 genes")
+#visualizing the percentage of variation explained by each PC
+percent.var <- attr(reducedDim(sce.zeisel.PCA.1000), "percentVar")
+plot(percent.var, log = "y", xlab = "PC", ylab = "Variance explained (%)")
 ```
 
+In PCA, the total amount of variation captured decreases for each subsequent PC. By the 10th PC, each additional PC is contributing only a small fraction to the total amount of variation explained in the dataset. Excluding them from downstream analyses has no major effect, and researchers will typically choose to include somewhere between 10 to 50 PCs. Including more PCs in the downstream analyses could theoretically cause the calculations to take longer, but in reality most calculations are fast enough that any slowdown isn't really noticeable.
 
-::: {.fyi}
-QUESTION
-1. How does including more genes affect the percentage of variation explained by the first few PCs?
-:::
+More detailed information on calculating and choosing PCs for genomic analyses can be found in the [Statistics for Genomics: PCA](https://jhudatascience.org/GDSCN_Book_Statistics_for_Genomics_PCA/) book.
 
 ## Applying non-linear visualization methods to PCs
 
-In scRNA-seq analysis, plotting PCs generally does not offer enough resolution to visualize cell clusters. Instead, we rely on additional dimensionality reduction methods that can use non-linear data transformation algorithms. The most common approach is the t-stochastic neighbor embedding (t-SNE) method (Van der Maaten and Hinton 2008). t-SNE maps high-dimensional data in a low-dimensional space in such a way that if two points are close to each other in the final t-SNE plot, those two points were also close to each other in the original high-dimensional plot. (The same does not necessarily hold true for two points that are distant from each other; t-SNE only preserves the relative locations of neighboring clusters and points.)
+In scRNA-seq analysis, plotting PCs generally does not offer enough resolution to visualize cell clusters. Instead, we rely on additional dimensionality reduction methods that can use non-linear data transformation algorithms. The most common approach is the t-stochastic neighbor embedding (t-SNE) method (Van der Maaten and Hinton 2008). 
 
-The t-SNE approach is computationally complex. In practice, we reduce the computational complexity in scRNA-seq analysis by performing t-SNE calculations on the top PCs in a dataset. We also need to set an initial starting seed and the perplexity parameter. This parameter  will determine the resolution of the plot. Lower perplexity values allow for finer resolution of population structure but can also be noisy.  It's a good idea to test multiple perplexity values when running your t-SNE analysis.
+t-SNE maps high-dimensional data in a low-dimensional space by first calculating the Euclidean distance between each set of points, then converting those distances into the probability that given pair of points are neighbors. On t-SNE plots, points that are members of the same cluster have a high probability of being neighbors. However, you can't judge the similarity of different clusters based on their position on the final plot, because the t-SNE algorithm does not retain that information.
+
+The t-SNE approach is computationally complex. In practice, we reduce the computational complexity in scRNA-seq analysis by performing t-SNE calculations on the top PCs in a dataset (this both decreases the amount of computational power and time needed for analysis). We also need to set an initial starting seed and the perplexity parameter (the number of effective neighbors for each point). This parameter  will determine the resolution of the plot. Lower perplexity values allow for finer resolution of population structure but can also be noisy.  It's a good idea to test multiple perplexity values when running your t-SNE analysis.
 
 We're going to use the PCs calculated using the top 1000 highly-variable genes (a common threshold) for the rest of the analyses.
 
 ```{r, warning = FALSE, message = FALSE}
 library(BiocSingular)
 
+#this code first calculates the t-SNE values using PCs, and then creates a plot of the first two t-SNE dimensions
 set.seed(100)
-sce.zeisel.tsne5 <- runTSNE(sce.zeisel.PCA.1000, dimred="PCA", perplexity=5)
-out5 <- plotReducedDim(sce.zeisel.tsne5, dimred="TSNE",
-    colour_by="level1class") + ggtitle("perplexity = 5")
+sce.zeisel.tsne5 <- runTSNE(sce.zeisel.PCA.1000, dimred = "PCA", perplexity = 5)
+out5 <- plotReducedDim(sce.zeisel.tsne5, dimred = "TSNE",
+    colour_by = "level1class") + ggtitle("perplexity = 5")
 
 set.seed(100)
-sce.zeisel.tsne20 <- runTSNE(sce.zeisel.PCA.1000, dimred="PCA", perplexity=20)
-out20 <- plotReducedDim(sce.zeisel.tsne20, dimred="TSNE",
-    colour_by="level1class") + ggtitle("perplexity = 20")
+sce.zeisel.tsne20 <- runTSNE(sce.zeisel.PCA.1000, dimred = "PCA", perplexity = 20)
+out20 <- plotReducedDim(sce.zeisel.tsne20, dimred = "TSNE",
+    colour_by = "level1class") + ggtitle("perplexity = 20")
 
 set.seed(100)
-sce.zeisel.tsne80 <- runTSNE(sce.zeisel.PCA.1000, dimred="PCA", perplexity=80)
-out80 <- plotReducedDim(sce.zeisel.tsne80, dimred="TSNE", 
-    colour_by="level1class") + ggtitle("perplexity = 80")
+sce.zeisel.tsne80 <- runTSNE(sce.zeisel.PCA.1000, dimred = "PCA", perplexity = 80)
+out80 <- plotReducedDim(sce.zeisel.tsne80, dimred = "TSNE", 
+    colour_by = "level1class") + ggtitle("perplexity = 80")
 
 out5
 out20
 out80
 ```
 
-Some researchers will use a different method for the non-linear visualization step in their analysis. This algorithm, called uniform manifold approximation and projection (UMAP), is faster and preserves more of the global data structure when reducing dimensions compared to t-SNE. As a result, though, the resolution within each cluster is reduced. UMAP is becoming the method of choice as scRNA-seq datasets become larger and larger.
+Some researchers will use a different method for the non-linear visualization step in their analysis. This algorithm, called uniform manifold approximation and projection (UMAP), is faster and preserves more of the global data structure when reducing dimensions compared to t-SNE (that is, you get more information about the similarity of clusters, not just of points). As a result, though, the resolution within each cluster is reduced. UMAP is becoming the method of choice as scRNA-seq datasets become larger and larger.
 
 ```{r, warning = FALSE, message = FALSE, echo=FALSE}
 install.packages("uwot")
@@ -100,9 +94,11 @@ library(uwot)
 ```
 
 ```{r, warning = FALSE, message = FALSE}
+
+#similarly to above, this code calculates the UMAP values from the PCs, then plots the first two UMAP dimensions
 set.seed(1100101001)
-sce.zeisel.umap <- runUMAP(sce.zeisel.PCA.1000, dimred="PCA")
-out.umap <- plotReducedDim(sce.zeisel.umap, dimred="UMAP", colour_by="level1class") + ggtitle("UMAP")
+sce.zeisel.umap <- runUMAP(sce.zeisel.PCA.1000, dimred = "PCA")
+out.umap <- plotReducedDim(sce.zeisel.umap, dimred = "UMAP", colour_by = "level1class") + ggtitle("UMAP")
 
 out20
 out.umap
@@ -112,7 +108,7 @@ out.umap
 QUESTIONS
 1. How does changing the perplexity parameter affect the t-SNE plot?
 
-3. How does the t-SNE plot compare to the UMAP plot?
+2. How does the t-SNE plot compare to the UMAP plot?
 :::
 
 # Clustering
@@ -121,28 +117,31 @@ At its core, clustering is a tool that allows us to examine structure and patter
 
 ## Clustering using graph-based methods
 
-Graph-based clustering is based on identifying the nearest neighbors of each cell in high-dimensional space. The connections between a cell and its neighbors (called edges) are weighted based on the similarity of the two cells connected. An edge is assigned a higher weight if the two cells it connects are more closely related. After all cells have been connected to their neighbors, we apply an algorithm to identify clusters, or communities, or related cells. Each cell within a community will be more closely related to any cell within the same community than to cells outside the community.
+Graph-based clustering is based on identifying the nearest neighbors of each cell in high-dimensional space. The connections between a cell and its neighbors (called edges) are weighted based on the similarity of the two cells connected. An edge is assigned a higher weight if the two cells it connects are more closely related. After all cells have been connected to their neighbors, we apply an algorithm to identify clusters, or communities, of related cells. Each cell within a community will be more closely related to any cell within the same community than to cells outside the community.
 
 Graph-based clustering scales easily, because it only used a _k_-nearest neighbor search. These searches run more quickly than other methods (like hierarchical clustering). Unfortunately, no information is retained about relationships beyond the neighboring cells. This effect also means that clustering resolution depends on cell density.
 
 ```{r, warning = FALSE, message = FALSE}
-snn.gr <- buildSNNGraph(sce.zeisel.PCA.1000, use.dimred="PCA")
+#here we let the R algorithm define and label our clusters
+snn.gr <- buildSNNGraph(sce.zeisel.PCA.1000, use.dimred = "PCA")
 
 colLabels(sce.zeisel.PCA.1000) <- factor(igraph::cluster_walktrap(snn.gr)$membership)
 
+#this command tells us how many clusters were identified (the top row) and how many cells belong to each cluster (the bottom row)
 table(colLabels(sce.zeisel.PCA.1000))
 ```
 
 We assigned the cluster assignments back into our `SingleCellExperiment` object as a factor in the column metadata, which allows us to visualize the cluster assignment on a t-SNE plot.
 
 ```{r, warning = FALSE, message = FALSE}
-#plotTSNE(sce.zeisel.PCA.1000, colour_by="label")
+#create a t-SNE plot showing the identified clusters
+plotTSNE(sce.zeisel.PCA.1000, colour_by = "label")
 ```
 
 
 ::: {.fyi}
 QUESTIONS
-1. How many clusters were identified using graph-based clustering?:::
+1. How many clusters were identified using graph-based clustering? Which cluster contained the most cells, and how many cells did it have?:::
 
 ```{r,warning = FALSE, message = FALSE}
 sessionInfo()

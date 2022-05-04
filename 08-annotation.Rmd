@@ -47,9 +47,10 @@ AUC or Cohen’s _d_ are effective regardless of the magnitude of the expression
 For this exercise, we're going to focus on upregulated markers, since those are particularly useful for identifying cell types in a heterogeneous population like the Zeisel dataset. We use the `findMarkers` command, which quickly identifies potential marker genes.
 
 ```{r, warning = FALSE, message = FALSE}
-#markers <- findMarkers(sce.zeisel.qc, direction="up")
-#marker.set <- markers[["1"]]
-#head(marker.set, 10)
+#identify those genes which are upregulated in some clusters compared to others
+markers <- findMarkers(sce.zeisel, direction = "up")
+marker.set <- markers[["1"]]
+head(marker.set, 10)
 ```
 
 This dataframe shows us the in log-fold expression change for each potential marker gene between cluster 1 and every other cluster.
@@ -59,8 +60,9 @@ This dataframe shows us the in log-fold expression change for each potential mar
 Once we've identified potential marker genes, we can use a heatmap to compare gene expression in each cell between clusters. 
 
 ```{r, warning = FALSE, message = FALSE}
+#pull the top most upregulated markers from cluster 1 (compared to the rest of the clusters) and look at their expression in all clusters
 #top.markers <- rownames(marker.set)[marker.set$Top <= 10]
-#plotHeatmap(sce.zeisel.PCA.1000, features=top.markers, order_columns_by="label")
+#plotHeatmap(sce.zeisel.PCA.1000, features = top.markers, order_columns_by = "label")
 ```
 
 In this heatmap, clusters are on the horizontal, while the top upregulated genes in cluster 1 are on the vertical. The magnitude of the log-fold expression change is indicated by color of each cell. 
@@ -75,8 +77,9 @@ install.packages("pheatmap")
 # AnVIL::install("pheatmap")
 #library(pheatmap)
 
+#this heatmap lets us compare the average expression of the gene within a cluster compared to the other clusters
 #logFCs <- getMarkerEffects(marker.set[1:50,])
-#pheatmap(logFCs, breaks=seq(-5, 5, length.out=101))
+#pheatmap(logFCs, breaks = seq(-5, 5, length.out = 101))
 ```
 
 Here we see that three genes are generally upregulated in Cluster 1 compared to the other clusters: _Gad1_, _Gad2_, and _Slc6a1_. This is where prior biological knowledge comes in handy, as both _Gad1_ and _Slc6a1_ are known interneuron markers (Zeng et al. 2012).
@@ -97,10 +100,13 @@ There are three basic strategies for annotating datasets: match the expression p
 The Zeisel dataset we have been working with has actually been annotated all this time.
 
 ```{r, warning = FALSE, message = FALSE}
+#calculate the top marker genes assigned to each cell type (level1class) in the Zeisel dataset
 wilcox.z <- pairwiseWilcox(sce.zeisel.qc, sce.zeisel.qc$level1class, 
-    lfc=1, direction="up")
+    lfc = 1, direction = "up")
 markers.z <- getTopMarkers(wilcox.z$statistics, wilcox.z$pairs,
-    pairwise=FALSE, n=50)
+    pairwise = FALSE, n = 50)
+
+#look at how many cell-type categories there are, as well as how many cells assigned to each category
 lengths(markers.z)
 ```
 
@@ -112,6 +118,7 @@ BiocManager::install("AUCell")
 ```
 
 ```{r, warning = FALSE, message = FALSE}
+#load the new dataset
 sce.tasic <- TasicBrainData()
 ```
 
@@ -120,15 +127,21 @@ We first create the gene set lists using the `GSEABase` package. The `AUCell` pa
 ```{r, warning = FALSE, message = FALSE}
 # AnVIL::install("GSEABase")
 library(GSEABase)
+
+#create a dataset that contains just the information about the Zeisel cell-type categories and the marker genes that define each cell-type
 all.sets <- lapply(names(markers.z), function(x) {
-    GeneSet(markers.z[[x]], setName=x)        
+    GeneSet(markers.z[[x]], setName = x)        
 })
 all.sets <- GeneSetCollection(all.sets)
 
 # AnVIL::install("AUCell")
 library(AUCell)
+
+#rank genes by expression values within each cell
 rankings <- AUCell_buildRankings(counts(sce.tasic),
-    plotStats=FALSE, verbose=FALSE)
+    plotStats = FALSE, verbose = FALSE)
+
+#calculate AUC for each previously-defined marker set (from Zeisel) in the Tasic data
 cell.aucs <- AUCell_calcAUC(all.sets, rankings)
 results <- t(assay(cell.aucs))
 ```
@@ -136,7 +149,10 @@ results <- t(assay(cell.aucs))
 After assigning cell type identities to each cluster, a researcher should always verify that the identities make sense. Since the Tasic dataset has also been annotated, we can compare our annotation to the researcher-provided annotation as a sort of sanity check.
 
 ```{r, warning = FALSE, message = FALSE}
+#assign cell type identity in the Tasic dataset by assumig the marker set with the top AUC is the proper label
 new.labels <- colnames(results)[max.col(results)]
+
+#compare our annotations to the annotations provided by the Tasic dataset
 tab <- table(new.labels, sce.tasic$broad_type)
 tab
 ```
