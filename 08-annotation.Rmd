@@ -48,9 +48,9 @@ For this exercise, we're going to focus on upregulated markers, since those are 
 
 ```{r, warning = FALSE, message = FALSE}
 # identify those genes which are upregulated in some clusters compared to others
-markers <- findMarkers(sce.zeisel.qc, direction = "up")
-marker.set <- markers[["1"]]
-head(marker.set, 10)
+#markers <- findMarkers(sce.zeisel.qc, direction = "up")
+#marker.set <- markers[["1"]]
+#head(marker.set, 10)
 ```
 
 This dataframe shows us the in log-fold expression change for each potential marker gene between cluster 1 and every other cluster.
