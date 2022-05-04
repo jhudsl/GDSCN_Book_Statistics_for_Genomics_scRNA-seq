@@ -4,7 +4,7 @@
 
 Laboratory and technical difficulties during the scRNA-seq data generation can result in poor quality libraries. Before any analysis can be run, the data itself must be checked and cleaned. If these low quality samples are not removed from the data, they can cause issues in the downstream analysis. 
 
-## Visualizing distributions of diagnostic metrics
+## Visualizing distributions of diagnostic metrics and identifying low-quality cells
 
 There are several common measures researchers use to determine sample quality in scRNA-seq:
 
@@ -24,27 +24,6 @@ sce.zeisel <- ZeiselBrainData()
 #sce.zeisel <- aggregateAcrossFeatures(sce.zeisel, id=sub("_loc[0-9]+$", "", rownames(sce.zeisel)))
 ```
 
-```{r, warning = FALSE, message = FALSE}
-# AnVIL::install("scater")
-library(scater)
-
-# loading the data, as described in the Overview section
-# sce.zeisel <- ZeiselBrainData()
-# sce.zeisel <- aggregateAcrossFeatures(sce.zeisel, id=sub("_loc[0-9]+$", "", rownames(sce.zeisel))
-
-# plotting the four data quality measures
-gridExtra::grid.arrange(
-    #plotColData(sce.zeisel, y = "sum") + scale_y_log10() + ggtitle("Total count"),
-    plotColData(sce.zeisel, y = "detected") + scale_y_log10() + ggtitle("Detected features"),
-    plotColData(sce.zeisel, y = "altexps_ERCC_percent") + ggtitle("ERCC percent"),
-    plotColData(sce.zeisel, y = "subsets_Mt_percent") + ggtitle("Mito percent"),
-    ncol=2
-)
-```
-
-
-## Identifying and removing low-quality cells
-
 The easiest way to identify low-quality cells is to set a quality threshold and remove any samples that fail to reach it. Some researchers use fixed thresholds, although this approach requires prior knowledge and experience to know what appropriate thresholds might be. We instead can define thresholds based on deviation from the median value of each metric. This approach assumes most of the samples in a dataset are high-quality. Deviation in this case is defined as the median absolute deviation (MAD). Samples are considered outliers if any of the following are true: 
 
   * library size < 3 MADs from the median
@@ -53,9 +32,6 @@ The easiest way to identify low-quality cells is to set a quality threshold and 
   
 
 (If your dataset uses spike-ins, treat the proportion of spike-ins similar to the proportion of mitochondrial reads.)
-
-After you have identified the low-quality cells, you can easily remove them in R. 
-
 
 ``` {r, warning = FALSE, message = FALSE}
 # identifying low-quality cells
@@ -76,7 +52,7 @@ unfiltered <- sce.zeisel # we'll keep a copy of the unfiltered data, so we can s
 colData(unfiltered) <- cbind(colData(unfiltered), stats)
 unfiltered$discard <- qc$discard # this gives us a list of the samples that have failed QC
 
-# plotting the distributions again, but now we are coloring the samples that will be removed in orange
+# plotting the distributions, coloring the samples that will be removed in orange
 gridExtra::grid.arrange(
     plotColData(unfiltered, y = "sum", colour_by = "discard") +
         scale_y_log10() + ggtitle("Total count"),
@@ -88,7 +64,14 @@ gridExtra::grid.arrange(
         colour_by = "discard") + ggtitle("Mito percent"),
     ncol=2
 )
+```
 
+## Identifying and removing low-quality cells
+
+
+After you have identified the low-quality cells, you can easily remove them in R. 
+
+``` {r, warning = FALSE, message = FALSE}
 # creating a dataset with only the samples that pass QC
 sce.zeisel.qc <- sce.zeisel[,!qc$discard]
 ```
