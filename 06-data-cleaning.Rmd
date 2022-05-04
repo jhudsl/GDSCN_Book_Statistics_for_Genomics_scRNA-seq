@@ -21,8 +21,7 @@ It is always a good idea to plot any metrics you're using as indicators of sampl
 ```{r, warning = FALSE, message = FALSE, echo=FALSE}
 library(scRNAseq)
 sce.zeisel <- ZeiselBrainData()
-sce.zeisel <- aggregateAcrossFeatures(sce.zeisel, 
-    id=sub("_loc[0-9]+$", "", rownames(sce.zeisel)))
+#sce.zeisel <- aggregateAcrossFeatures(sce.zeisel, id=sub("_loc[0-9]+$", "", rownames(sce.zeisel)))
 ```
 
 ```{r, warning = FALSE, message = FALSE}
@@ -31,8 +30,7 @@ library(scater)
 
 # loading the data, as described in the Overview section
 # sce.zeisel <- ZeiselBrainData()
-# sce.zeisel <- aggregateAcrossFeatures(sce.zeisel, 
-    id=sub("_loc[0-9]+$", "", rownames(sce.zeisel))
+# sce.zeisel <- aggregateAcrossFeatures(sce.zeisel, id=sub("_loc[0-9]+$", "", rownames(sce.zeisel))
 
 # plotting the four data quality measures
 gridExtra::grid.arrange(

@@ -21,7 +21,7 @@ library(scRNAseq)
 library(scater)
 library(scran)
 sce.zeisel <- ZeiselBrainData()
-sce.zeisel <- aggregateAcrossFeatures(sce.zeisel, id=sub("_loc[0-9]+$", "", rownames(sce.zeisel)))
+#sce.zeisel <- aggregateAcrossFeatures(sce.zeisel, id=sub("_loc[0-9]+$", "", rownames(sce.zeisel)))
 stats <- perCellQCMetrics(sce.zeisel, subsets=list(
     Mt=rowData(sce.zeisel)$featureType=="mito"))
 qc <- quickPerCellQC(stats, percent_subsets=c("altexps_ERCC_percent", 
