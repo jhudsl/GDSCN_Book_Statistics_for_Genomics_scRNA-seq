@@ -1,0 +1,193 @@
+# (PART\*) DATA CLEANING {-}
+
+# Quality control of the library
+
+Laboratory and technical difficulties during the scRNA-seq data generation can result in poor quality libraries. Before any analysis can be run, the data itself must be checked and cleaned. If these low quality samples are not removed from the data, they can cause issues in the downstream analysis. 
+
+## Visualizing distributions of diagnostic metrics and identifying low-quality cells
+
+There are several common measures researchers use to determine sample quality in scRNA-seq:
+
+  * __library size__, the total sum of counts across all relevant features (in this case, genes) for each cell. A small library size indicates the RNA has been lost at some point during the library preparation. 
+ 
+  * __number of expressed features per cell__, the number of genes with non-zero counts. Few expressed genes suggests the transcript population was not successfully captured during the library prep.
+ 
+  * __proportion of reads mapped to mitochondrial genes relative to total count across all features__. A high proportion suggests cytoplasmic RNA was lost from cells due to perforation of the cell membrane. These holes are large enough to let individual transcripts to escape but too small for mitochondria to escape, leading to the library being enriched for mitochondrial genes. 
+ 
+Some experiments will use other metrics for quality control, such as RNA spike-ins (RNA transcripts of known sequence and quantity). In these experiments, researchers may choose to use proportion of spike-in reads relative to total counts as a QC (quality control) metric. This proportion should be similar across all samples, so any enrichment of the spike-in indicates a poor-quality sample. The Zeisel brain dataset does include spike-ins (s standardized control mix, labeled 'ERCC' [for the External RNA Controls Consortium, which sets standards]), so we will use this metric.
+
+It is always a good idea to plot any metrics you're using as indicators of sample quality as the first step.
+
+```{r, warning = FALSE, message = FALSE, echo=FALSE}
+library(scRNAseq)
+library(scater)
+sce.zeisel <- ZeiselBrainData()
+#sce.zeisel <- aggregateAcrossFeatures(sce.zeisel, id=sub("_loc[0-9]+$", "", rownames(sce.zeisel)))
+```
+
+The easiest way to identify low-quality cells is to set a quality threshold and remove any samples that fail to reach it. Some researchers use fixed thresholds, although this approach requires prior knowledge and experience to know what appropriate thresholds might be. We instead can define thresholds based on deviation from the median value of each metric. This approach assumes most of the samples in a dataset are high-quality. Deviation in this case is defined as the median absolute deviation (MAD). Samples are considered outliers if any of the following are true: 
+
+  * library size < 3 MADs from the median
+  * number of expressed reads < 3 MADs from the median
+  * proportion of mitochondrial reads > 3 MADs from the median
+  
+
+(If your dataset uses spike-ins, treat the proportion of spike-ins similar to the proportion of mitochondrial reads.)
+
+``` {r, warning = FALSE, message = FALSE}
+library(scater)
+
+# identifying low-quality cells
+stats <- perCellQCMetrics(sce.zeisel, subsets = list(Mt = rowData(sce.zeisel)$featureType == "mito"))
+qc <- quickPerCellQC(stats, percent_subsets = c("altexps_ERCC_percent", 
+    "subsets_Mt_percent"))
+
+# final sample size of samples failing QC
+colSums(as.matrix(qc))
+```
+
+It would also be informative to see where the samples that failed QC (quality control) fall in the distributions of all of our quality markers.
+
+``` {r, warning = FALSE, message = FALSE}
+# visualizing low-quality cells in distributions
+unfiltered <- sce.zeisel # we'll keep a copy of the unfiltered data, so we can see where on the distributions the eliminated samples lie
+colData(unfiltered) <- cbind(colData(unfiltered), stats)
+unfiltered$discard <- qc$discard # this gives us a list of the samples that have failed QC
+
+# plotting the distributions, coloring the samples that will be removed in orange
+gridExtra::grid.arrange(
+    plotColData(unfiltered, y = "sum", colour_by = "discard") +
+        scale_y_log10() + ggtitle("Total count"),
+    plotColData(unfiltered, y = "detected", colour_by = "discard") +
+        scale_y_log10() + ggtitle("Detected features"),
+    plotColData(unfiltered, y = "altexps_ERCC_percent",
+        colour_by = "discard") + ggtitle("ERCC percent"),
+    plotColData(unfiltered, y = "subsets_Mt_percent",
+        colour_by = "discard") + ggtitle("Mito percent"),
+    ncol=2
+)
+```
+
+## Identifying and removing low-quality cells
+
+
+After you have identified the low-quality cells, you can easily remove them in R. 
+
+``` {r, warning = FALSE, message = FALSE}
+# creating a dataset with only the samples that pass QC
+sce.zeisel.qc <- sce.zeisel[,!qc$discard]
+```
+
+
+::: {.fyi}
+QUESTIONS
+
+1. How many samples did you remove as suspected low-quality cells? 
+
+2. Do all the quality metrics (total count, number of expressed features, percentage of mitochondrial reads, and percentage of ERCC reads) agree when it comes to identifying low-quality samples?
+
+3. Which metric resulted in the removal of the greatest number of samples?
+:::
+
+
+::: {.fyi}
+Some researchers mark the suspected low-quality cells instead of removing them from the analysis. Ideally, the low-quality cells form their own cluster that can be ignored when interpreting the scRNA-seq results. This approach prevents the researcher from discarding cells or cell types that represent a true biological state and happen to have poor QC metrics.
+:::
+
+
+# Normalization
+
+Single-cell RNA-seq libraries often vary in sequence coverage due to technical differences in cDNA capture or PCR amplification. We use normalization to correct for these differences. 
+
+## Calculating scaling factors
+
+The simplest approach is to use library size as a scaling factor for each cell. One assumption underlying the library size normalization method is that library size is an unbiased estimate of capture or amplification issues. While this assumption is not necessarily biologically realistic, in practice the accuracy of the normalization step is unlikely to cause issues in exploratory scRNA-seq analyses.
+
+Sometimes unbalanced differential expression exists between samples, which results in composition biases in the dataset. Library size normalization can result in the non-differentially-expressed genes falsely appearing to be downregulated in one cell compared to another. If this sounds familiar, it's because this topic has been well-studied for bulk RNA-seq analysis. Several bulk normalization methods have been created to deal with this problem in bulk RNA-seq analyses. In order to translate these algorithms to scRNA-seq and the large number of zero and low counts, we pool counts from many cells for accurate sizing factor estimation. These estimated sizing factors are then "deconvolved" into cell-based factors. This process is called normalization by deconvolution.
+
+```{r, warning = FALSE, message = FALSE}
+# AnVIL::install("scran")
+library(scran)
+
+# calculating scaling factors
+set.seed(1000)
+clusters <- quickCluster(sce.zeisel.qc)
+sce.zeisel.qc <- computeSumFactors(sce.zeisel.qc, cluster = clusters) 
+
+# comparing scaling factors based on library size (librarySizeFactors) and deconvolution (sizeFactors)
+plot(librarySizeFactors(sce.zeisel.qc), sizeFactors(sce.zeisel.qc), pch = 16, xlab = "Library size factors", ylab = "Deconvolution factors", log = "xy")
+```
+
+::: {.fyi}
+QUESTIONS
+
+1. How do the scaling factors using library size normalization compare to the scaling factors using deconvolution normalization?
+:::
+
+## Applying scaling factors and computing normalized expression values
+
+Once we have calculated scaling factors, we can compute normalized expression values for each sample by dividing the count for each gene by the size factor for the cell. The function we are using also log-transforms these normalized values, which will allow us to calculate log-fold changes in expression (a much more intuitive measure of differential expression!) This lets us focus on contributions from genes with strong relative differences.
+
+```{r, warning = FALSE, message = FALSE}
+# computing normalized expression values
+sce.zeisel.qc <- logNormCounts(sce.zeisel.qc)
+```
+
+
+# Choosing features for the analysis
+
+The goal with many scRNA-seq analyses is to identify differences in gene expression across multiple cell types; in order to do this, cells are clustered together into groups based on a single similarity (or dissimilarity) value between a pair of cells. Which genes you choose to include in the calculation of the similarity metric can greatly influence your downstream analyses.
+
+In general, you will choose to include those genes with the greatest variability in gene expression across all the samples. The underlying assumption is this increased variability is "true" biological variation as opposed to technical noise.
+
+## Examining per-gene variation
+
+We can calculate the per-gene variation across all samples using the variance of the log-normalized expression values you computed in the Normalization section. Because we are using a log-transformation, the total variance of a gene is partly driven by its abundance (not underlying biological heterogeneity). To correct for this relationship, we use a model that calculates the expected amount of variation for each abundance value. We then use the difference between the observed variation and the expected variation for each gene to identify highly-variable genes while controlling for cell abundance. 
+
+The Zeisel data was generated across multiple plates, so we need to be wary of any possible batch effects that could be driving highly-variable genes. Normally we would address this by blocking. However, each plate only contained 20-40 cells, and the cell population as a whole is highly heterogeneous, making it unlikely the sampled cell types on each plate is the same (one of the assumptions of blocking on plate). Thus, we will ignore blocking for this analysis.
+
+If you work with a dataset that does not contain spike-ins, you would use the `modelGeneVar()` command instead of `modelGeneVarWithSpikes()`.
+
+```{r, warning = FALSE, message = FALSE}
+# calculating per-gene variation for each samples using the log-normalized expression value; the "ERCC" option tells the algorithm that information about technical (that is, non-biological) variation can be calculated using the data column labeled "ERCC"
+dec.zeisel.qc <- modelGeneVarWithSpikes(sce.zeisel.qc, "ERCC")
+
+# plotting the expected variance (blue curve and orange points), as well as the observed variance (black points)
+plot(dec.zeisel.qc$mean, dec.zeisel.qc$total, pch = 16, cex = 0.5,
+    xlab = "Mean of log-expression", ylab = "Variance of log-expression")
+curfit <- metadata(dec.zeisel.qc)
+points(curfit$mean, curfit$var, col = "orange", pch = 16)
+curve(curfit$trend(x), col = 'dodgerblue', add = TRUE, lwd = 2)
+```
+
+The expected variance for each log-expression value is plotted in orange. Observed values (the black points) much higher than this trend line will be used for downstream analyses.
+
+## Selecting highly variable genes
+
+When choosing the genes for downstream analysis, you will need to balance choosing as many genes as possible (so as not to exclude important biological variation) with limiting the amount of random noise. The most straightforward approach is to simply take the top _n_ genes after ranking based on the biological component of variance. We are creating objects with the top 500, 1000, and 2000 genes, so that we can examine how our choice of _n_ impacts downstream calculations and steps.
+
+```{r, warning = FALSE, message = FALSE}
+# getting the top 500, 1000, and 2000 most-variable genes
+top500.hvgs <- getTopHVGs(dec.zeisel.qc, n = 500)
+top1000.hvgs <- getTopHVGs(dec.zeisel.qc, n = 1000)
+top2000.hvgs <- getTopHVGs(dec.zeisel.qc, n = 2000)
+
+# look at the cut-offs
+dec.zeisel.qc <- dec.zeisel.qc[order(dec.zeisel.qc$bio, decreasing = TRUE),]
+dec.zeisel.qc[c(1,500,1000,2000),1:6]
+
+```
+
+In this dataframe, the `bio` column represents the excess variation in gene expression (that is, the difference between the observed and expected expression). We are looking at four different genes - the gene with the greatest excess variation, as well as the last genes included in the top 500, top 1000, and top 2000 genes.
+
+::: {.fyi}
+QUESTIONS
+
+1. What is the range of log-fold expression changes (the excess variation) when you choose the top 500 genes? What about when you choose the top 1000 genes? The top 2000 genes? 
+:::
+
+
+
+```{r, warning = FALSE, message = FALSE}
+sessionInfo()
+```

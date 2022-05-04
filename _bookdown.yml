@@ -2,10 +2,11 @@ book_filename: "Course_Name"
 chapter_name: "Chapter "
 repo: https://github.com/jhudsl/AnVIL_Template/
 rmd_files: ["index.Rmd",
-            "01-intro.Rmd",
-            "02-chapter_of_course.Rmd",
-            "About.Rmd",
-            "References.Rmd"]
+            "03-overview.Rmd",
+            "06-data-cleaning.Rmd",
+            "07-clustering.Rmd",
+            "08-annotation.Rmd",
+            "About.Rmd"]
 new_session: yes
 bibliography: [book.bib]
 delete_merged_file: true

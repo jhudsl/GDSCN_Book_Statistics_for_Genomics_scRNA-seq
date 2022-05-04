@@ -1,5 +1,5 @@
 ---
-title: "AnVIL Book Name"
+title: "Statistics for Genomics: scRNAseq"
 date: "`r format(Sys.time(), '%B %d, %Y')`"
 site: bookdown::bookdown_site
 documentclass: book
