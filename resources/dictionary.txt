@@ -42,11 +42,14 @@ interneuron
 ITCR
 itcrtraining
 ITN
+J
 KEGG
 fyi
 Leanpub
+Learn
 Lun
 logFC
+Mach
 MADs
 Markua
 Maaten
@@ -63,9 +66,10 @@ OTTR
 ottrpal
 PMID
 PMCID
-PMC4985242
-PMC3328777
+PMC
 preprint
+Res
+RNA-seq
 scanpy
 scRNA
 scRNAseq
@@ -75,6 +79,7 @@ Slc6a1
 subtypes
 SNE
 Tasic
+transcriptomics
 UE
 UE5
 UMAP
