@@ -38,12 +38,12 @@ top1000.hvgs <- getTopHVGs(dec.zeisel.qc, n=1000)
 ```{r, warning = FALSE, message = FALSE}
 library(scran)
 
-#calculating PCA
-#the denoisePCA command calculates PCs and removes those that primarily capture technical noise
+# calculating PCA
+# the denoisePCA command calculates PCs and removes those that primarily capture technical noise
 set.seed(101011001)
 sce.zeisel.PCA.1000 <- denoisePCA(sce.zeisel.qc, technical = dec.zeisel.qc, subset.row = top1000.hvgs, type = "pca") #the technical option tells R where to find information about how much of the variation is attributed to "technical", or non-biological, sources
 
-#visualizing the percentage of variation explained by each PC
+# visualizing the percentage of variation explained by each PC
 percent.var <- attr(reducedDim(sce.zeisel.PCA.1000), "percentVar")
 plot(percent.var, log = "y", xlab = "PC", ylab = "Variance explained (%)")
 ```
@@ -65,7 +65,7 @@ We're going to use the PCs calculated using the top 1000 highly-variable genes (
 ```{r, warning = FALSE, message = FALSE}
 library(BiocSingular)
 
-#this code first calculates the t-SNE values using PCs, and then creates a plot of the first two t-SNE dimensions
+# this code first calculates the t-SNE values using PCs, and then creates a plot of the first two t-SNE dimensions
 set.seed(100)
 sce.zeisel.tsne5 <- runTSNE(sce.zeisel.PCA.1000, dimred = "PCA", perplexity = 5)
 out5 <- plotReducedDim(sce.zeisel.tsne5, dimred = "TSNE",
@@ -95,7 +95,7 @@ library(uwot)
 
 ```{r, warning = FALSE, message = FALSE}
 
-#similarly to above, this code calculates the UMAP values from the PCs, then plots the first two UMAP dimensions
+# calculate the UMAP values from the PCs, then plot the first two UMAP dimensions
 set.seed(1100101001)
 sce.zeisel.umap <- runUMAP(sce.zeisel.PCA.1000, dimred = "PCA")
 out.umap <- plotReducedDim(sce.zeisel.umap, dimred = "UMAP", colour_by = "level1class") + ggtitle("UMAP")
@@ -122,19 +122,19 @@ Graph-based clustering is based on identifying the nearest neighbors of each cel
 Graph-based clustering scales easily, because it only used a _k_-nearest neighbor search. These searches run more quickly than other methods (like hierarchical clustering). Unfortunately, no information is retained about relationships beyond the neighboring cells. This effect also means that clustering resolution depends on cell density.
 
 ```{r, warning = FALSE, message = FALSE}
-#here we let the R algorithm define and label our clusters
+# let the R algorithm define and label our clusters
 snn.gr <- buildSNNGraph(sce.zeisel.PCA.1000, use.dimred = "PCA")
 
 colLabels(sce.zeisel.PCA.1000) <- factor(igraph::cluster_walktrap(snn.gr)$membership)
 
-#this command tells us how many clusters were identified (the top row) and how many cells belong to each cluster (the bottom row)
+# this command tells us how many clusters were identified (the top row) and how many cells belong to each cluster (the bottom row)
 table(colLabels(sce.zeisel.PCA.1000))
 ```
 
 We assigned the cluster assignments back into our `SingleCellExperiment` object as a factor in the column metadata, which allows us to visualize the cluster assignment on a t-SNE plot.
 
 ```{r, warning = FALSE, message = FALSE}
-#create a t-SNE plot showing the identified clusters
+# create a t-SNE plot showing the identified clusters
 plotTSNE(sce.zeisel.PCA.1000, colour_by = "label")
 ```
 

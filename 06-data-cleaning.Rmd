@@ -29,12 +29,12 @@ sce.zeisel <- aggregateAcrossFeatures(sce.zeisel,
 # AnVIL::install("scater")
 library(scater)
 
-#loading the data, as described in the Overview section
-#sce.zeisel <- ZeiselBrainData()
-#sce.zeisel <- aggregateAcrossFeatures(sce.zeisel, 
+# loading the data, as described in the Overview section
+# sce.zeisel <- ZeiselBrainData()
+# sce.zeisel <- aggregateAcrossFeatures(sce.zeisel, 
     id=sub("_loc[0-9]+$", "", rownames(sce.zeisel)))
 
-#plotting the four data quality measures
+# plotting the four data quality measures
 gridExtra::grid.arrange(
     plotColData(sce.zeisel, y = "sum") + scale_y_log10() + ggtitle("Total count"),
     plotColData(sce.zeisel, y = "detected") + scale_y_log10() + ggtitle("Detected features"),
@@ -60,25 +60,25 @@ After you have identified the low-quality cells, you can easily remove them in R
 
 
 ``` {r, warning = FALSE, message = FALSE}
-#Identifying low-quality cells
+# identifying low-quality cells
 stats <- perCellQCMetrics(sce.zeisel, subsets=list(
     Mt=rowData(sce.zeisel)$featureType == "mito"))
 qc <- quickPerCellQC(stats, percent_subsets = c("altexps_ERCC_percent", 
     "subsets_Mt_percent"))
 
-#Final sample size of samples failing QC
+# final sample size of samples failing QC
 colSums(as.matrix(qc))
 ```
 
 It would also be informative to see where the samples that failed QC (quality control) fall in the distributions of all of our quality markers.
 
 ``` {r, warning = FALSE, message = FALSE}
-#Visualizing low-quality cells in distributions
-unfiltered <- sce.zeisel #we'll keep a copy of the unfiltered data, so we can see where on the distributions the eliminated samples lie
+# visualizing low-quality cells in distributions
+unfiltered <- sce.zeisel # we'll keep a copy of the unfiltered data, so we can see where on the distributions the eliminated samples lie
 colData(unfiltered) <- cbind(colData(unfiltered), stats)
-unfiltered$discard <- qc$discard #this gives us a list of the samples that have failed QC
+unfiltered$discard <- qc$discard # this gives us a list of the samples that have failed QC
 
-#here we plot the distributions again, but now we are coloring the samples that will be removed in orange
+# plotting the distributions again, but now we are coloring the samples that will be removed in orange
 gridExtra::grid.arrange(
     plotColData(unfiltered, y = "sum", colour_by = "discard") +
         scale_y_log10() + ggtitle("Total count"),
@@ -91,7 +91,7 @@ gridExtra::grid.arrange(
     ncol=2
 )
 
-#creating a dataset with only the samples that pass QC
+# creating a dataset with only the samples that pass QC
 sce.zeisel.qc <- sce.zeisel[,!qc$discard]
 ```
 
@@ -126,12 +126,12 @@ Sometimes unbalanced differential expression exists between samples, which resul
 # AnVIL::install("scran")
 library(scran)
 
-#calculating scaling factors
+# calculating scaling factors
 set.seed(1000)
 clusters <- quickCluster(sce.zeisel.qc)
 sce.zeisel.qc <- computeSumFactors(sce.zeisel.qc, cluster = clusters) 
 
-#comparing scaling factors based on library size (librarySizeFactors) and deconvolution (sizeFactors)
+# comparing scaling factors based on library size (librarySizeFactors) and deconvolution (sizeFactors)
 plot(librarySizeFactors(sce.zeisel.qc), sizeFactors(sce.zeisel.qc), pch = 16, xlab = "Library size factors", ylab = "Deconvolution factors", log = "xy")
 ```
 
@@ -146,7 +146,7 @@ QUESTIONS
 Once we have calculated scaling factors, we can compute normalized expression values for each sample by dividing the count for each gene by the size factor for the cell. The function we are using also log-transforms these normalized values, which will allow us to calculate log-fold changes in expression (a much more intuitive measure of differential expression!) This lets us focus on contributions from genes with strong relative differences.
 
 ```{r, warning = FALSE, message = FALSE}
-#computing normalized expression values
+# computing normalized expression values
 sce.zeisel.qc <- logNormCounts(sce.zeisel.qc)
 ```
 
@@ -166,10 +166,10 @@ The Zeisel data was generated across multiple plates, so we need to be wary of a
 If you work with a dataset that does not contain spike-ins, you would use the `modelGeneVar()` command instead of `modelGeneVarWithSpikes()`.
 
 ```{r, warning = FALSE, message = FALSE}
-#calculating per-gene variation for each samples using the log-normalized expression value; the "ERCC" option tells the algorithm that information about technical (that is, non-biological) variation can be calculated using the data column labeled "ERCC"
+# calculating per-gene variation for each samples using the log-normalized expression value; the "ERCC" option tells the algorithm that information about technical (that is, non-biological) variation can be calculated using the data column labeled "ERCC"
 dec.zeisel.qc <- modelGeneVarWithSpikes(sce.zeisel.qc, "ERCC")
 
-#plotting the expected variance (blue curve and orange points), as well as the observed variance (black points)
+# plotting the expected variance (blue curve and orange points), as well as the observed variance (black points)
 plot(dec.zeisel.qc$mean, dec.zeisel.qc$total, pch = 16, cex = 0.5,
     xlab = "Mean of log-expression", ylab = "Variance of log-expression")
 curfit <- metadata(dec.zeisel.qc)
@@ -184,12 +184,12 @@ The expected variance for each log-expression value is plotted in orange. Observ
 When choosing the genes for downstream analysis, you will need to balance choosing as many genes as possible (so as not to exclude important biological variation) with limiting the amount of random noise. The most straightforward approach is to simply take the top _n_ genes after ranking based on the biological component of variance. We are creating objects with the top 500, 1000, and 2000 genes, so that we can examine how our choice of _n_ impacts downstream calculations and steps.
 
 ```{r, warning = FALSE, message = FALSE}
-#getting the top 500, 1000, and 2000 most-variable genes
+# getting the top 500, 1000, and 2000 most-variable genes
 top500.hvgs <- getTopHVGs(dec.zeisel.qc, n = 500)
 top1000.hvgs <- getTopHVGs(dec.zeisel.qc, n = 1000)
 top2000.hvgs <- getTopHVGs(dec.zeisel.qc, n = 2000)
 
-#look at the cut-offs
+# look at the cut-offs
 dec.zeisel.qc <- dec.zeisel.qc[order(dec.zeisel.qc$bio, decreasing = TRUE),]
 dec.zeisel.qc[c(1,500,1000,2000),1:6]
 
