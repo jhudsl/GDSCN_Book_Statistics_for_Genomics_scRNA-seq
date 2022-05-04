@@ -3,6 +3,7 @@ chapter_name: "Chapter "
 repo: https://github.com/jhudsl/AnVIL_Template/
 rmd_files: ["index.Rmd",
             "03-overview.Rmd",
+            "04-starting-rstudio.Rmd",
             "06-data-cleaning.Rmd",
             "07-clustering.Rmd",
             "08-annotation.Rmd",
