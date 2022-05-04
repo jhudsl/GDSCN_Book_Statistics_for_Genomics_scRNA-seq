@@ -135,7 +135,7 @@ We assigned the cluster assignments back into our `SingleCellExperiment` object 
 
 ```{r, warning = FALSE, message = FALSE}
 # create a t-SNE plot showing the identified clusters
-plotTSNE(sce.zeisel.PCA.1000, colour_by = "label")
+#plotTSNE(sce.zeisel.PCA.1000, colour_by = "label")
 ```
 
 
