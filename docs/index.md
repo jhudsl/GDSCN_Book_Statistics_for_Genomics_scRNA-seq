@@ -1,6 +1,6 @@
 ---
-title: "AnVIL Book Name"
-date: "March 23, 2022"
+title: "Statistics for Genomics: scRNAseq"
+date: "May 04, 2022"
 site: bookdown::bookdown_site
 documentclass: book
 bibliography: book.bib

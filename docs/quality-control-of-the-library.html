@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Page not found | Statistics for Genomics: scRNAseq</title>
+  <title>Chapter 2 Quality control of the library | Statistics for Genomics: scRNAseq</title>
   <meta name="description" content="Description about Course/Book." />
   <meta name="generator" content="bookdown 0.24 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Page not found | Statistics for Genomics: scRNAseq" />
+  <meta property="og:title" content="Chapter 2 Quality control of the library | Statistics for Genomics: scRNAseq" />
   <meta property="og:type" content="book" />
   
   
@@ -16,7 +16,7 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Page not found | Statistics for Genomics: scRNAseq" />
+  <meta name="twitter:title" content="Chapter 2 Quality control of the library | Statistics for Genomics: scRNAseq" />
   
   <meta name="twitter:description" content="Description about Course/Book." />
   
@@ -30,8 +30,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   <link rel="shortcut icon" href="assets/anvil_favicon.ico" type="image/x-icon" />
-
-
+<link rel="prev" href="overview.html"/>
+<link rel="next" href="normalization.html"/>
 <script src="libs/header-attrs-2.10/header-attrs.js"></script>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
@@ -217,11 +217,76 @@ code span.wa { color: #8f5902; font-weight: bold; font-style: italic; } /* Warni
 <div class="hero-image-container"> 
   <img class= "hero-image" src="assets/AnVIL_style/dasl_thin_main_image.png">
 </div>
-<div id="page-not-found" class="section level1">
-<h1>Page not found</h1>
-<p>The page you requested cannot be found (perhaps it was moved or renamed).</p>
-<p>You may want to try searching to find the page's new location, or use
-the table of contents to find the page you are looking for.</p>
+<div id="quality-control-of-the-library" class="section level1" number="2">
+<h1><span class="header-section-number">Chapter 2</span> Quality control of the library</h1>
+<p>Laboratory and technical difficulties during the scRNA-seq data generation can result in poor quality libraries. Before any analysis can be run, the data itself must be checked and cleaned. If these low quality samples are not removed from the data, they can cause issues in the downstream analysis.</p>
+<div id="visualizing-distributions-of-diagnostic-metrics-and-identifying-low-quality-cells" class="section level2" number="2.1">
+<h2><span class="header-section-number">2.1</span> Visualizing distributions of diagnostic metrics and identifying low-quality cells</h2>
+<p>There are several common measures researchers use to determine sample quality in scRNA-seq:</p>
+<ul>
+<li><p><strong>library size</strong>, the total sum of counts across all relevant features (in this case, genes) for each cell. A small library size indicates the RNA has been lost at some point during the library preparation.</p></li>
+<li><p><strong>number of expressed features per cell</strong>, the number of genes with non-zero counts. Few expressed genes suggests the transcript population was not successfully captured during the library prep.</p></li>
+<li><p><strong>proportion of reads mapped to mitochondrial genes relative to total count across all features</strong>. A high proportion suggests cytoplasmic RNA was lost from cells due to perforation of the cell membrane. These holes are large enough to let individual transcripts to escape but too small for mitochondria to escape, leading to the library being enriched for mitochondrial genes.</p></li>
+</ul>
+<p>Some experiments will use other metrics for quality control, such as RNA spike-ins (RNA transcripts of known sequence and quantity). In these experiments, researchers may choose to use proportion of spike-in reads relative to total counts as a QC (quality control) metric. This proportion should be similar across all samples, so any enrichment of the spike-in indicates a poor-quality sample. The Zeisel brain dataset does include spike-ins (s standardized control mix, labeled ‘ERCC’ [for the External RNA Controls Consortium, which sets standards]), so we will use this metric.</p>
+<p>It is always a good idea to plot any metrics you’re using as indicators of sample quality as the first step.</p>
+<p>The easiest way to identify low-quality cells is to set a quality threshold and remove any samples that fail to reach it. Some researchers use fixed thresholds, although this approach requires prior knowledge and experience to know what appropriate thresholds might be. We instead can define thresholds based on deviation from the median value of each metric. This approach assumes most of the samples in a dataset are high-quality. Deviation in this case is defined as the median absolute deviation (MAD). Samples are considered outliers if any of the following are true:</p>
+<ul>
+<li>library size &lt; 3 MADs from the median</li>
+<li>number of expressed reads &lt; 3 MADs from the median</li>
+<li>proportion of mitochondrial reads &gt; 3 MADs from the median</li>
+</ul>
+<p>(If your dataset uses spike-ins, treat the proportion of spike-ins similar to the proportion of mitochondrial reads.)</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="quality-control-of-the-library.html#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(scater)</span>
+<span id="cb3-2"><a href="quality-control-of-the-library.html#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="quality-control-of-the-library.html#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="co"># identifying low-quality cells</span></span>
+<span id="cb3-4"><a href="quality-control-of-the-library.html#cb3-4" aria-hidden="true" tabindex="-1"></a>stats <span class="ot">&lt;-</span> <span class="fu">perCellQCMetrics</span>(sce.zeisel, <span class="at">subsets =</span> <span class="fu">list</span>(<span class="at">Mt =</span> <span class="fu">rowData</span>(sce.zeisel)<span class="sc">$</span>featureType <span class="sc">==</span> <span class="st">&quot;mito&quot;</span>))</span>
+<span id="cb3-5"><a href="quality-control-of-the-library.html#cb3-5" aria-hidden="true" tabindex="-1"></a>qc <span class="ot">&lt;-</span> <span class="fu">quickPerCellQC</span>(stats, <span class="at">percent_subsets =</span> <span class="fu">c</span>(<span class="st">&quot;altexps_ERCC_percent&quot;</span>, </span>
+<span id="cb3-6"><a href="quality-control-of-the-library.html#cb3-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;subsets_Mt_percent&quot;</span>))</span>
+<span id="cb3-7"><a href="quality-control-of-the-library.html#cb3-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-8"><a href="quality-control-of-the-library.html#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="co"># final sample size of samples failing QC</span></span>
+<span id="cb3-9"><a href="quality-control-of-the-library.html#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="fu">colSums</span>(<span class="fu">as.matrix</span>(qc))</span></code></pre></div>
+<pre><code>##              low_lib_size            low_n_features high_altexps_ERCC_percent 
+##                         0                         3                        65 
+##   high_subsets_Mt_percent                   discard 
+##                       128                       189</code></pre>
+<p>It would also be informative to see where the samples that failed QC (quality control) fall in the distributions of all of our quality markers.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="quality-control-of-the-library.html#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># visualizing low-quality cells in distributions</span></span>
+<span id="cb5-2"><a href="quality-control-of-the-library.html#cb5-2" aria-hidden="true" tabindex="-1"></a>unfiltered <span class="ot">&lt;-</span> sce.zeisel <span class="co"># we&#39;ll keep a copy of the unfiltered data, so we can see where on the distributions the eliminated samples lie</span></span>
+<span id="cb5-3"><a href="quality-control-of-the-library.html#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="fu">colData</span>(unfiltered) <span class="ot">&lt;-</span> <span class="fu">cbind</span>(<span class="fu">colData</span>(unfiltered), stats)</span>
+<span id="cb5-4"><a href="quality-control-of-the-library.html#cb5-4" aria-hidden="true" tabindex="-1"></a>unfiltered<span class="sc">$</span>discard <span class="ot">&lt;-</span> qc<span class="sc">$</span>discard <span class="co"># this gives us a list of the samples that have failed QC</span></span>
+<span id="cb5-5"><a href="quality-control-of-the-library.html#cb5-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-6"><a href="quality-control-of-the-library.html#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="co"># plotting the distributions, coloring the samples that will be removed in orange</span></span>
+<span id="cb5-7"><a href="quality-control-of-the-library.html#cb5-7" aria-hidden="true" tabindex="-1"></a>gridExtra<span class="sc">::</span><span class="fu">grid.arrange</span>(</span>
+<span id="cb5-8"><a href="quality-control-of-the-library.html#cb5-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">plotColData</span>(unfiltered, <span class="at">y =</span> <span class="st">&quot;sum&quot;</span>, <span class="at">colour_by =</span> <span class="st">&quot;discard&quot;</span>) <span class="sc">+</span></span>
+<span id="cb5-9"><a href="quality-control-of-the-library.html#cb5-9" aria-hidden="true" tabindex="-1"></a>        <span class="fu">scale_y_log10</span>() <span class="sc">+</span> <span class="fu">ggtitle</span>(<span class="st">&quot;Total count&quot;</span>),</span>
+<span id="cb5-10"><a href="quality-control-of-the-library.html#cb5-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">plotColData</span>(unfiltered, <span class="at">y =</span> <span class="st">&quot;detected&quot;</span>, <span class="at">colour_by =</span> <span class="st">&quot;discard&quot;</span>) <span class="sc">+</span></span>
+<span id="cb5-11"><a href="quality-control-of-the-library.html#cb5-11" aria-hidden="true" tabindex="-1"></a>        <span class="fu">scale_y_log10</span>() <span class="sc">+</span> <span class="fu">ggtitle</span>(<span class="st">&quot;Detected features&quot;</span>),</span>
+<span id="cb5-12"><a href="quality-control-of-the-library.html#cb5-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">plotColData</span>(unfiltered, <span class="at">y =</span> <span class="st">&quot;altexps_ERCC_percent&quot;</span>,</span>
+<span id="cb5-13"><a href="quality-control-of-the-library.html#cb5-13" aria-hidden="true" tabindex="-1"></a>        <span class="at">colour_by =</span> <span class="st">&quot;discard&quot;</span>) <span class="sc">+</span> <span class="fu">ggtitle</span>(<span class="st">&quot;ERCC percent&quot;</span>),</span>
+<span id="cb5-14"><a href="quality-control-of-the-library.html#cb5-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">plotColData</span>(unfiltered, <span class="at">y =</span> <span class="st">&quot;subsets_Mt_percent&quot;</span>,</span>
+<span id="cb5-15"><a href="quality-control-of-the-library.html#cb5-15" aria-hidden="true" tabindex="-1"></a>        <span class="at">colour_by =</span> <span class="st">&quot;discard&quot;</span>) <span class="sc">+</span> <span class="fu">ggtitle</span>(<span class="st">&quot;Mito percent&quot;</span>),</span>
+<span id="cb5-16"><a href="quality-control-of-the-library.html#cb5-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">ncol=</span><span class="dv">2</span></span>
+<span id="cb5-17"><a href="quality-control-of-the-library.html#cb5-17" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
+<p><img src="06-data-cleaning_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
+</div>
+<div id="identifying-and-removing-low-quality-cells" class="section level2" number="2.2">
+<h2><span class="header-section-number">2.2</span> Identifying and removing low-quality cells</h2>
+<p>After you have identified the low-quality cells, you can easily remove them in R.</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="quality-control-of-the-library.html#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># creating a dataset with only the samples that pass QC</span></span>
+<span id="cb6-2"><a href="quality-control-of-the-library.html#cb6-2" aria-hidden="true" tabindex="-1"></a>sce.zeisel.qc <span class="ot">&lt;-</span> sce.zeisel[,<span class="sc">!</span>qc<span class="sc">$</span>discard]</span></code></pre></div>
+<div class="fyi">
+<p>QUESTIONS</p>
+<ol style="list-style-type: decimal">
+<li><p>How many samples did you remove as suspected low-quality cells?</p></li>
+<li><p>Do all the quality metrics (total count, number of expressed features, percentage of mitochondrial reads, and percentage of ERCC reads) agree when it comes to identifying low-quality samples?</p></li>
+<li><p>Which metric resulted in the removal of the greatest number of samples?</p></li>
+</ol>
+</div>
+<div class="fyi">
+<p>Some researchers mark the suspected low-quality cells instead of removing them from the analysis. Ideally, the low-quality cells form their own cluster that can be ignored when interpreting the scRNA-seq results. This approach prevents the researcher from discarding cells or cell types that represent a true biological state and happen to have poor QC metrics.</p>
+</div>
+</div>
 </div>
 <hr>
 <center> 
@@ -236,8 +301,8 @@ the table of contents to find the page you are looking for.</p>
           </div>
         </div>
       </div>
-
-
+<a href="overview.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="normalization.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

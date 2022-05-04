@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Chapter 5 Dimensionality reduction | Statistics for Genomics: scRNAseq</title>
+  <meta name="description" content="Description about Course/Book." />
+  <meta name="generator" content="bookdown 0.24 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Chapter 5 Dimensionality reduction | Statistics for Genomics: scRNAseq" />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="Description about Course/Book." />
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Chapter 5 Dimensionality reduction | Statistics for Genomics: scRNAseq" />
+  
+  <meta name="twitter:description" content="Description about Course/Book." />
+  
+
+
+
+<meta name="date" content="2022-05-04" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  <link rel="shortcut icon" href="assets/anvil_favicon.ico" type="image/x-icon" />
+<link rel="prev" href="choosing-features-for-the-analysis.html"/>
+<link rel="next" href="clustering.html"/>
+<script src="libs/header-attrs-2.10/header-attrs.js"></script>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.0.1/anchor-sections.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.0.1/anchor-sections.js"></script>
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  background-color: #f8f8f8; }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ef2929; } /* Alert */
+code span.an { color: #8f5902; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #c4a000; } /* Attribute */
+code span.bn { color: #0000cf; } /* BaseN */
+code span.cf { color: #204a87; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4e9a06; } /* Char */
+code span.cn { color: #000000; } /* Constant */
+code span.co { color: #8f5902; font-style: italic; } /* Comment */
+code span.cv { color: #8f5902; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #8f5902; font-weight: bold; font-style: italic; } /* Documentation */
+code span.dt { color: #204a87; } /* DataType */
+code span.dv { color: #0000cf; } /* DecVal */
+code span.er { color: #a40000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #0000cf; } /* Float */
+code span.fu { color: #000000; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #8f5902; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #204a87; font-weight: bold; } /* Keyword */
+code span.op { color: #ce5c00; font-weight: bold; } /* Operator */
+code span.ot { color: #8f5902; } /* Other */
+code span.pp { color: #8f5902; font-style: italic; } /* Preprocessor */
+code span.sc { color: #000000; } /* SpecialChar */
+code span.ss { color: #4e9a06; } /* SpecialString */
+code span.st { color: #4e9a06; } /* String */
+code span.va { color: #000000; } /* Variable */
+code span.vs { color: #4e9a06; } /* VerbatimString */
+code span.wa { color: #8f5902; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<link rel="stylesheet" href="assets/AnVIL_style/style_anvil.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<a href="https://anvilproject.org/" target="_blank"><img src="assets/AnVIL_style/logo-anvil.png" style="width: 80%; padding-left: 15px; padding-top: 8px;"</a>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>About this Book</a>
+<ul>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#anvil-collection"><i class="fa fa-check"></i>AnVIL Collection</a></li>
+</ul></li>
+<li class="chapter" data-level="1" data-path="overview.html"><a href="overview.html"><i class="fa fa-check"></i><b>1</b> OVERVIEW</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="overview.html"><a href="overview.html#scope"><i class="fa fa-check"></i><b>1.1</b> Scope</a></li>
+<li class="chapter" data-level="1.2" data-path="overview.html"><a href="overview.html#bioconductor-reference-book"><i class="fa fa-check"></i><b>1.2</b> Bioconductor reference book</a></li>
+<li class="chapter" data-level="1.3" data-path="overview.html"><a href="overview.html#singlecellexperiment"><i class="fa fa-check"></i><b>1.3</b> SingleCellExperiment</a></li>
+<li class="chapter" data-level="1.4" data-path="overview.html"><a href="overview.html#obtaining-data"><i class="fa fa-check"></i><b>1.4</b> Obtaining Data</a></li>
+</ul></li>
+<li class="part"><span><b>DATA CLEANING</b></span></li>
+<li class="chapter" data-level="2" data-path="quality-control-of-the-library.html"><a href="quality-control-of-the-library.html"><i class="fa fa-check"></i><b>2</b> Quality control of the library</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="quality-control-of-the-library.html"><a href="quality-control-of-the-library.html#visualizing-distributions-of-diagnostic-metrics-and-identifying-low-quality-cells"><i class="fa fa-check"></i><b>2.1</b> Visualizing distributions of diagnostic metrics and identifying low-quality cells</a></li>
+<li class="chapter" data-level="2.2" data-path="quality-control-of-the-library.html"><a href="quality-control-of-the-library.html#identifying-and-removing-low-quality-cells"><i class="fa fa-check"></i><b>2.2</b> Identifying and removing low-quality cells</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="normalization.html"><a href="normalization.html"><i class="fa fa-check"></i><b>3</b> Normalization</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="normalization.html"><a href="normalization.html#calculating-scaling-factors"><i class="fa fa-check"></i><b>3.1</b> Calculating scaling factors</a></li>
+<li class="chapter" data-level="3.2" data-path="normalization.html"><a href="normalization.html#applying-scaling-factors-and-computing-normalized-expression-values"><i class="fa fa-check"></i><b>3.2</b> Applying scaling factors and computing normalized expression values</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="choosing-features-for-the-analysis.html"><a href="choosing-features-for-the-analysis.html"><i class="fa fa-check"></i><b>4</b> Choosing features for the analysis</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="choosing-features-for-the-analysis.html"><a href="choosing-features-for-the-analysis.html#examining-per-gene-variation"><i class="fa fa-check"></i><b>4.1</b> Examining per-gene variation</a></li>
+<li class="chapter" data-level="4.2" data-path="choosing-features-for-the-analysis.html"><a href="choosing-features-for-the-analysis.html#selecting-highly-variable-genes"><i class="fa fa-check"></i><b>4.2</b> Selecting highly variable genes</a></li>
+</ul></li>
+<li class="part"><span><b>CLUSTERING</b></span></li>
+<li class="chapter" data-level="5" data-path="dimensionality-reduction.html"><a href="dimensionality-reduction.html"><i class="fa fa-check"></i><b>5</b> Dimensionality reduction</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="dimensionality-reduction.html"><a href="dimensionality-reduction.html#calculating-and-choosing-pcs"><i class="fa fa-check"></i><b>5.1</b> Calculating and choosing PCs</a></li>
+<li class="chapter" data-level="5.2" data-path="dimensionality-reduction.html"><a href="dimensionality-reduction.html#applying-non-linear-visualization-methods-to-pcs"><i class="fa fa-check"></i><b>5.2</b> Applying non-linear visualization methods to PCs</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="clustering.html"><a href="clustering.html"><i class="fa fa-check"></i><b>6</b> Clustering</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="clustering.html"><a href="clustering.html#clustering-using-graph-based-methods"><i class="fa fa-check"></i><b>6.1</b> Clustering using graph-based methods</a></li>
+</ul></li>
+<li class="part"><span><b>ANNOTATION</b></span></li>
+<li class="chapter" data-level="7" data-path="marker-gene-detection.html"><a href="marker-gene-detection.html"><i class="fa fa-check"></i><b>7</b> Marker gene detection</a>
+<ul>
+<li class="chapter" data-level="7.1" data-path="marker-gene-detection.html"><a href="marker-gene-detection.html#calculating-and-ranking-effect-size-summary-statistics"><i class="fa fa-check"></i><b>7.1</b> Calculating and ranking effect size summary statistics</a></li>
+<li class="chapter" data-level="7.2" data-path="marker-gene-detection.html"><a href="marker-gene-detection.html#comparing-gene-expression-levels-across-clusters"><i class="fa fa-check"></i><b>7.2</b> Comparing gene expression levels across clusters</a></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="cell-type-annotation.html"><a href="cell-type-annotation.html"><i class="fa fa-check"></i><b>8</b> Cell type annotation</a>
+<ul>
+<li class="chapter" data-level="8.1" data-path="cell-type-annotation.html"><a href="cell-type-annotation.html#annotating-cell-types"><i class="fa fa-check"></i><b>8.1</b> Annotating cell types</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="about-the-authors.html"><a href="about-the-authors.html"><i class="fa fa-check"></i>About the Authors</a></li>
+<li class="divider"></li>
+<p style="text-align:center;"> <a href="https://github.com/jhudsl/DaSL_Course_Template_Bookdown" target="blank" > This content was published with</a> <a href="https://bookdown.org/" target="blank"> bookdown by: </a> </p>
+<p style="text-align:center;"> <a href="http://jhudatascience.org/"> The Johns Hopkins Data Science Lab </a></p>
+<a href="http://jhudatascience.org/"><img src="https://jhudatascience.org/images/dasl.png" style=" width: 80%; padding-left: 40px; padding-top: 8px; vertical-align: top "</a>
+<p style="text-align:center; font-size: 12px;"> <a href="https://github.com/rstudio4edu/rstudio4edu-book/"> Style adapted from: rstudio4edu-book </a> <a href ="https://creativecommons.org/licenses/by/2.0/"> (CC-BY 2.0) </a></p>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Statistics for Genomics: scRNAseq</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<head>
+  <meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=10.0,initial-scale=1.0">
+  <!--script src="https://kit.fontawesome.com/6a26f47516.js"></script-->
+  <!--<script src="assets/hideOutput.js"></script>-->
+  <link href="assets/AnvIL_style/style_anvil.css" rel="stylesheet">
+</head>
+        
+
+
+<div class="hero-image-container"> 
+  <img class= "hero-image" src="assets/AnVIL_style/dasl_thin_main_image.png">
+</div>
+<div id="dimensionality-reduction" class="section level1" number="5">
+<h1><span class="header-section-number">Chapter 5</span> Dimensionality reduction</h1>
+<p>Each gene in the data represents a different dimension of the data. Reducing the number of dimensions in our data has multiple benefits, including reducing the computational work needed for downstream analyses. It also reduces the noise in the data through averaging the signal across multiple genes.</p>
+<p>Dimensionality reduction is a very common technique used in data science in general, not just in scRNA-seq analysis. You will find yourself using it over and over whenever you work with high-dimensional data. Dimensionality reduction is possible for genomic expression methods because so many genes have correlated expression. This is a consequence of different genes being involved in the same biological processes.</p>
+<div id="calculating-and-choosing-pcs" class="section level2" number="5.1">
+<h2><span class="header-section-number">5.1</span> Calculating and choosing PCs</h2>
+<p>We first use principal component analysis (PCA), which is a dimensionality reduction method that maximizes the amount of variation captured by each component, or PC.</p>
+<p>It’s up to the researcher to choose how many PCs to use for downstream analyses. More PCs mean that more biological signal is retained in the data, but it also increases the potential for noise. In our analyses, we will use 50 (the default). We will also use the top 1000 genes to calculate the PCs.</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="dimensionality-reduction.html#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(scran)</span>
+<span id="cb14-2"><a href="dimensionality-reduction.html#cb14-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-3"><a href="dimensionality-reduction.html#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="co"># calculating PCA</span></span>
+<span id="cb14-4"><a href="dimensionality-reduction.html#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="co"># the denoisePCA command calculates PCs and removes those that primarily capture technical noise</span></span>
+<span id="cb14-5"><a href="dimensionality-reduction.html#cb14-5" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">101011001</span>)</span>
+<span id="cb14-6"><a href="dimensionality-reduction.html#cb14-6" aria-hidden="true" tabindex="-1"></a>sce.zeisel.PCA<span class="fl">.1000</span> <span class="ot">&lt;-</span> <span class="fu">denoisePCA</span>(sce.zeisel.qc, <span class="at">technical =</span> dec.zeisel.qc, <span class="at">subset.row =</span> top1000.hvgs) <span class="co">#the technical option tells R where to find information about how much of the variation is attributed to &quot;technical&quot;, or non-biological, sources</span></span>
+<span id="cb14-7"><a href="dimensionality-reduction.html#cb14-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-8"><a href="dimensionality-reduction.html#cb14-8" aria-hidden="true" tabindex="-1"></a><span class="co"># visualizing the percentage of variation explained by each PC</span></span>
+<span id="cb14-9"><a href="dimensionality-reduction.html#cb14-9" aria-hidden="true" tabindex="-1"></a>percent.var <span class="ot">&lt;-</span> <span class="fu">attr</span>(<span class="fu">reducedDim</span>(sce.zeisel.PCA<span class="fl">.1000</span>), <span class="st">&quot;percentVar&quot;</span>)</span>
+<span id="cb14-10"><a href="dimensionality-reduction.html#cb14-10" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(percent.var, <span class="at">log =</span> <span class="st">&quot;y&quot;</span>, <span class="at">xlab =</span> <span class="st">&quot;PC&quot;</span>, <span class="at">ylab =</span> <span class="st">&quot;Variance explained (%)&quot;</span>)</span></code></pre></div>
+<p><img src="07-clustering_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
+<p>In PCA, the total amount of variation captured decreases for each subsequent PC. By the 10th PC, each additional PC is contributing only a small fraction to the total amount of variation explained in the dataset. Excluding them from downstream analyses has no major effect, and researchers will typically choose to include somewhere between 10 to 50 PCs. Including more PCs in the downstream analyses could theoretically cause the calculations to take longer, but in reality most calculations are fast enough that any slowdown isn’t really noticeable.</p>
+<p>More detailed information on calculating and choosing PCs for genomic analyses can be found in the <a href="https://jhudatascience.org/GDSCN_Book_Statistics_for_Genomics_PCA/">Statistics for Genomics: PCA</a> book.</p>
+</div>
+<div id="applying-non-linear-visualization-methods-to-pcs" class="section level2" number="5.2">
+<h2><span class="header-section-number">5.2</span> Applying non-linear visualization methods to PCs</h2>
+<p>In scRNA-seq analysis, plotting PCs generally does not offer enough resolution to visualize cell clusters. Instead, we rely on additional dimensionality reduction methods that can use non-linear data transformation algorithms. The most common approach is the t-stochastic neighbor embedding (t-SNE) method (Van der Maaten and Hinton 2008).</p>
+<p>t-SNE maps high-dimensional data in a low-dimensional space by first calculating the Euclidean distance between each set of points, then converting those distances into the probability that given pair of points are neighbors. On t-SNE plots, points that are members of the same cluster have a high probability of being neighbors. However, you can’t judge the similarity of different clusters based on their position on the final plot, because the t-SNE algorithm does not retain that information.</p>
+<p>The t-SNE approach is computationally complex. In practice, we reduce the computational complexity in scRNA-seq analysis by performing t-SNE calculations on the top PCs in a dataset (this both decreases the amount of computational power and time needed for analysis). We also need to set an initial starting seed and the perplexity parameter (the number of effective neighbors for each point). This parameter will determine the resolution of the plot. Lower perplexity values allow for finer resolution of population structure but can also be noisy. It’s a good idea to test multiple perplexity values when running your t-SNE analysis.</p>
+<p>We’re going to use the PCs calculated using the top 1000 highly-variable genes (a common threshold) for the rest of the analyses.</p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="dimensionality-reduction.html#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(BiocSingular)</span>
+<span id="cb15-2"><a href="dimensionality-reduction.html#cb15-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-3"><a href="dimensionality-reduction.html#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="co"># this code first calculates the t-SNE values using PCs, and then creates a plot of the first two t-SNE dimensions</span></span>
+<span id="cb15-4"><a href="dimensionality-reduction.html#cb15-4" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">100</span>)</span>
+<span id="cb15-5"><a href="dimensionality-reduction.html#cb15-5" aria-hidden="true" tabindex="-1"></a>sce.zeisel.tsne5 <span class="ot">&lt;-</span> <span class="fu">runTSNE</span>(sce.zeisel.PCA<span class="fl">.1000</span>, <span class="at">dimred =</span> <span class="st">&quot;PCA&quot;</span>, <span class="at">perplexity =</span> <span class="dv">5</span>)</span>
+<span id="cb15-6"><a href="dimensionality-reduction.html#cb15-6" aria-hidden="true" tabindex="-1"></a>out5 <span class="ot">&lt;-</span> <span class="fu">plotReducedDim</span>(sce.zeisel.tsne5, <span class="at">dimred =</span> <span class="st">&quot;TSNE&quot;</span>,</span>
+<span id="cb15-7"><a href="dimensionality-reduction.html#cb15-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">colour_by =</span> <span class="st">&quot;level1class&quot;</span>) <span class="sc">+</span> <span class="fu">ggtitle</span>(<span class="st">&quot;perplexity = 5&quot;</span>)</span>
+<span id="cb15-8"><a href="dimensionality-reduction.html#cb15-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-9"><a href="dimensionality-reduction.html#cb15-9" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">100</span>)</span>
+<span id="cb15-10"><a href="dimensionality-reduction.html#cb15-10" aria-hidden="true" tabindex="-1"></a>sce.zeisel.tsne20 <span class="ot">&lt;-</span> <span class="fu">runTSNE</span>(sce.zeisel.PCA<span class="fl">.1000</span>, <span class="at">dimred =</span> <span class="st">&quot;PCA&quot;</span>, <span class="at">perplexity =</span> <span class="dv">20</span>)</span>
+<span id="cb15-11"><a href="dimensionality-reduction.html#cb15-11" aria-hidden="true" tabindex="-1"></a>out20 <span class="ot">&lt;-</span> <span class="fu">plotReducedDim</span>(sce.zeisel.tsne20, <span class="at">dimred =</span> <span class="st">&quot;TSNE&quot;</span>,</span>
+<span id="cb15-12"><a href="dimensionality-reduction.html#cb15-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">colour_by =</span> <span class="st">&quot;level1class&quot;</span>) <span class="sc">+</span> <span class="fu">ggtitle</span>(<span class="st">&quot;perplexity = 20&quot;</span>)</span>
+<span id="cb15-13"><a href="dimensionality-reduction.html#cb15-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-14"><a href="dimensionality-reduction.html#cb15-14" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">100</span>)</span>
+<span id="cb15-15"><a href="dimensionality-reduction.html#cb15-15" aria-hidden="true" tabindex="-1"></a>sce.zeisel.tsne80 <span class="ot">&lt;-</span> <span class="fu">runTSNE</span>(sce.zeisel.PCA<span class="fl">.1000</span>, <span class="at">dimred =</span> <span class="st">&quot;PCA&quot;</span>, <span class="at">perplexity =</span> <span class="dv">80</span>)</span>
+<span id="cb15-16"><a href="dimensionality-reduction.html#cb15-16" aria-hidden="true" tabindex="-1"></a>out80 <span class="ot">&lt;-</span> <span class="fu">plotReducedDim</span>(sce.zeisel.tsne80, <span class="at">dimred =</span> <span class="st">&quot;TSNE&quot;</span>, </span>
+<span id="cb15-17"><a href="dimensionality-reduction.html#cb15-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">colour_by =</span> <span class="st">&quot;level1class&quot;</span>) <span class="sc">+</span> <span class="fu">ggtitle</span>(<span class="st">&quot;perplexity = 80&quot;</span>)</span>
+<span id="cb15-18"><a href="dimensionality-reduction.html#cb15-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-19"><a href="dimensionality-reduction.html#cb15-19" aria-hidden="true" tabindex="-1"></a>out5</span></code></pre></div>
+<p><img src="07-clustering_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="dimensionality-reduction.html#cb16-1" aria-hidden="true" tabindex="-1"></a>out20</span></code></pre></div>
+<p><img src="07-clustering_files/figure-html/unnamed-chunk-3-2.png" width="672" /></p>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="dimensionality-reduction.html#cb17-1" aria-hidden="true" tabindex="-1"></a>out80</span></code></pre></div>
+<p><img src="07-clustering_files/figure-html/unnamed-chunk-3-3.png" width="672" /></p>
+<p>Some researchers will use a different method for the non-linear visualization step in their analysis. This algorithm, called uniform manifold approximation and projection (UMAP), is faster and preserves more of the global data structure when reducing dimensions compared to t-SNE (that is, you get more information about the similarity of clusters, not just of points). As a result, though, the resolution within each cluster is reduced. UMAP is becoming the method of choice as scRNA-seq datasets become larger and larger.</p>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="dimensionality-reduction.html#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># calculate the UMAP values from the PCs, then plot the first two UMAP dimensions</span></span>
+<span id="cb18-2"><a href="dimensionality-reduction.html#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1100101001</span>)</span>
+<span id="cb18-3"><a href="dimensionality-reduction.html#cb18-3" aria-hidden="true" tabindex="-1"></a>sce.zeisel.umap <span class="ot">&lt;-</span> <span class="fu">runUMAP</span>(sce.zeisel.PCA<span class="fl">.1000</span>, <span class="at">dimred =</span> <span class="st">&quot;PCA&quot;</span>)</span>
+<span id="cb18-4"><a href="dimensionality-reduction.html#cb18-4" aria-hidden="true" tabindex="-1"></a>out.umap <span class="ot">&lt;-</span> <span class="fu">plotReducedDim</span>(sce.zeisel.umap, <span class="at">dimred =</span> <span class="st">&quot;UMAP&quot;</span>, <span class="at">colour_by =</span> <span class="st">&quot;level1class&quot;</span>) <span class="sc">+</span> <span class="fu">ggtitle</span>(<span class="st">&quot;UMAP&quot;</span>)</span>
+<span id="cb18-5"><a href="dimensionality-reduction.html#cb18-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-6"><a href="dimensionality-reduction.html#cb18-6" aria-hidden="true" tabindex="-1"></a>out20</span></code></pre></div>
+<p><img src="07-clustering_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="dimensionality-reduction.html#cb19-1" aria-hidden="true" tabindex="-1"></a>out.umap</span></code></pre></div>
+<p><img src="07-clustering_files/figure-html/unnamed-chunk-5-2.png" width="672" /></p>
+<div class="fyi">
+<p>QUESTIONS
+1. How does changing the perplexity parameter affect the t-SNE plot?</p>
+<ol start="2" style="list-style-type: decimal">
+<li>How does the t-SNE plot compare to the UMAP plot?</li>
+</ol>
+</div>
+</div>
+</div>
+<hr>
+<center> 
+  <div class="footer">
+      All illustrations <a href="https://creativecommons.org/licenses/by/4.0/">CC-BY. </a>
+      <br>
+      All other materials <a href= "https://creativecommons.org/licenses/by/4.0/"> CC-BY </a> unless noted otherwise.
+  </div>
+</center>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="choosing-features-for-the-analysis.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="clustering.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": null,
+"search": {
+"engine": "fuse",
+"options": null
+},
+"toc": {
+"collapse": "section"
+}
+});
+});
+</script>
+
+</body>
+
+</html>
