@@ -3,6 +3,7 @@ aaa
 al
 Amezquita
 AnVIL
+Apr
 astrocytes
 B
 BIPOC
@@ -28,6 +29,7 @@ Epub
 ERCC
 et
 fastq
+Feb
 G
 Gad1
 Gad2
@@ -43,6 +45,7 @@ ITCR
 itcrtraining
 ITN
 J
+Jan
 KEGG
 fyi
 Leanpub
@@ -59,6 +62,7 @@ neocortex
 Neurosci
 NCI
 NHGRI
+Nov
 nn
 oligodendrocyte
 oligodendrocytes
@@ -79,6 +83,7 @@ Slc6a1
 subtypes
 SNE
 Tasic
+taxonomy
 transcriptomics
 UE
 UE5
