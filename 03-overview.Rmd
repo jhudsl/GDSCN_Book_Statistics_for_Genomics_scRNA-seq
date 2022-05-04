@@ -2,11 +2,11 @@
 
 ## Scope
 
-There are many programs available for scRNA-seq analysis. In this lesson, we will be using the `scran` and `scater` packages available from Bioconductor. We do not cover .fastq processing, nor do we explore the Seurat and scanpy pipelines.
+There are many excellent programs available for scRNA-seq analysis. In this lesson, we will be using the `scran` and `scater` packages available from Bioconductor. We do not cover .fastq processing, nor do we explore the [Seurat](https://satijalab.org/seurat/) and [scanpy](https://scanpy.readthedocs.io/en/stable/index.html) pipelines.
 
 ## Bioconductor reference book
 
-The lessons and activities are adapted from the excellent [Orchestrating Single-Cell Analysis with Bioconductor](https://bioconductor.org/books/release/OSCA/) book by Robert Amezquita, Aaron Lun, Stephanie Hicks, and Raphael Gottardo.
+The lessons and activities are adapted from the [Orchestrating Single-Cell Analysis with Bioconductor](https://bioconductor.org/books/release/OSCA/) book by Robert Amezquita, Aaron Lun, Stephanie Hicks, and Raphael Gottardo.
 
 ## SingleCellExperiment
 
@@ -18,32 +18,27 @@ Bioconductor stores data from single-cell experiments in a special class (the `S
 # AnVIL::install(c("SingleCellExperiment"))
 library(SingleCellExperiment)
 
-# create an empty data frame to use as an example 
+#create an empty data frame to use as an example 
 counts <- matrix(rpois(100, lambda = 10), ncol = 10, nrow = 10)
-pretend.cell.labels <- sample(letters, ncol(counts), replace=TRUE)
+pretend.cell.labels <- sample(letters, ncol(counts), replace = TRUE)
+counts <- matrix(rpois(100, lambda = 10), ncol = 10, nrow = 10)
+pretend.cell.labels <- sample(letters, ncol(counts), replace = TRUE)
 pretend.gene.lengths <- sample(10000, nrow(counts))
 
-# create SingleCellExperiment object
+#create SingleCellExperiment object
 sce <- SingleCellExperiment(list(counts = counts),
-    colData = DataFrame(label = pretend.cell.labels),
-    rowData = DataFrame(length = pretend.gene.lengths),
-    metadata = list(study = "GSE111111")
-)
-sce
+    colData=DataFrame(label = pretend.cell.labels),
+    rowData=DataFrame(length = pretend.gene.lengths),
+    metadata=list(study = "GSE111111"))
 ```
-
-When we look at the `SingleCellExperiment` object, we can see that information about the names of the features are stored in `rowData`. Likewise, the names of the cells (or samples) are stored in `colData`. Metadata is stored in `metadata`, while dimensionality reduction coordinates can be stored in `reducedDims()`. Alternate experiments (such as spike-in data) are stored in `altExp`.
-
-For more information on the `SingleCellExperiment` class, take a look at the [vignette](https://www.bioconductor.org/packages/release/bioc/vignettes/SingleCellExperiment/inst/doc/intro.html).
 
 ## Obtaining Data
 
-For these exercises, we are using a dataset of cells from a mouse brain from [Zeisel et al. 2015](https://pubmed.ncbi.nlm.nih.gov/25700174/). This dataset contains about 3000 brain cells of a wide variety of types (such as neurons, glia, and oligodendrocytes). The library was prepared using a UMI-based (unique molecular identifiers) protocol, and the expression data you are working with is UMI counts that have been mapped to each gene.
+For these exercises, we are using a dataset of cells from a mouse brain from [Zeisel et al. 2015](https://pubmed.ncbi.nlm.nih.gov/25700174/). This dataset contains about 3000 brain cells of a wide variety of types (such as neurons, glia, and oligodendrocytes). The library was prepared using a UMI-based (unique molecular identifiers) protocol, and the expression data you are working with is UMI counts that have been mapped to each gene. You can learn more about UMI protocols and why they are useful [here](https://dnatech.genomecenter.ucdavis.edu/faqs/what-are-umis-and-why-are-they-used-in-high-throughput-sequencing/).
 
 This dataset has already had low-quality cells removed prior to publication, but we will still run QC steps to verify that the remaining cells are of good quality.
 
 The dataset is stored as a `SingleCellExperiment` object in the `scRNAseq` package. Here we retrieve the dataset, as well as do a little bit of extra formatting to merge together redundant rows (which are the result of alternative genomic coordinates for the same gene). 
-
 
 ```{r, warning = FALSE, message = FALSE}
 # AnVIL::install(c("scRNAseq", "scater"))

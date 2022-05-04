@@ -32,7 +32,7 @@ library(scater)
 # loading the data, as described in the Overview section
 # sce.zeisel <- ZeiselBrainData()
 # sce.zeisel <- aggregateAcrossFeatures(sce.zeisel, 
-    id=sub("_loc[0-9]+$", "", rownames(sce.zeisel)))
+    id=sub("_loc[0-9]+$", "", rownames(sce.zeisel))
 
 # plotting the four data quality measures
 gridExtra::grid.arrange(
@@ -61,8 +61,8 @@ After you have identified the low-quality cells, you can easily remove them in R
 
 ``` {r, warning = FALSE, message = FALSE}
 # identifying low-quality cells
-stats <- perCellQCMetrics(sce.zeisel, subsets=list(
-    Mt=rowData(sce.zeisel)$featureType == "mito"))
+stats <- perCellQCMetrics(sce.zeisel, subsets = list(
+    Mt = rowData(sce.zeisel)$featureType == "mito"))
 qc <- quickPerCellQC(stats, percent_subsets = c("altexps_ERCC_percent", 
     "subsets_Mt_percent"))
 
