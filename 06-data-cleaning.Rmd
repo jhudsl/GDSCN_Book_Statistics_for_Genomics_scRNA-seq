@@ -20,6 +20,7 @@ It is always a good idea to plot any metrics you're using as indicators of sampl
 
 ```{r, warning = FALSE, message = FALSE, echo=FALSE}
 library(scRNAseq)
+library(scater)
 sce.zeisel <- ZeiselBrainData()
 #sce.zeisel <- aggregateAcrossFeatures(sce.zeisel, id=sub("_loc[0-9]+$", "", rownames(sce.zeisel)))
 ```
@@ -34,9 +35,10 @@ The easiest way to identify low-quality cells is to set a quality threshold and 
 (If your dataset uses spike-ins, treat the proportion of spike-ins similar to the proportion of mitochondrial reads.)
 
 ``` {r, warning = FALSE, message = FALSE}
+library(scater)
+
 # identifying low-quality cells
-stats <- perCellQCMetrics(sce.zeisel, subsets = list(
-    Mt = rowData(sce.zeisel)$featureType == "mito"))
+stats <- perCellQCMetrics(sce.zeisel, subsets = list(Mt = rowData(sce.zeisel)$featureType == "mito"))
 qc <- quickPerCellQC(stats, percent_subsets = c("altexps_ERCC_percent", 
     "subsets_Mt_percent"))
 
