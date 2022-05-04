@@ -41,7 +41,7 @@ library(scran)
 # calculating PCA
 # the denoisePCA command calculates PCs and removes those that primarily capture technical noise
 set.seed(101011001)
-sce.zeisel.PCA.1000 <- denoisePCA(sce.zeisel.qc, technical = dec.zeisel.qc, subset.row = top1000.hvgs, type = "pca") #the technical option tells R where to find information about how much of the variation is attributed to "technical", or non-biological, sources
+sce.zeisel.PCA.1000 <- denoisePCA(sce.zeisel.qc, technical = dec.zeisel.qc, subset.row = top1000.hvgs) #the technical option tells R where to find information about how much of the variation is attributed to "technical", or non-biological, sources
 
 # visualizing the percentage of variation explained by each PC
 percent.var <- attr(reducedDim(sce.zeisel.PCA.1000), "percentVar")
