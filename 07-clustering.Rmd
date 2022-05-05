@@ -123,7 +123,7 @@ Graph-based clustering scales easily, because it only used a _k_-nearest neighbo
 
 ```{r, warning = FALSE, message = FALSE}
 # let the R algorithm define and label our clusters
-nn.clusters <- clusterCells(sce.zeisel.PCA.1000, use.dimred="PCA")
+nn.clusters <- clusterCells(sce.zeisel.PCA.1000, use.dimred="TSNE")
 
 # this command tells us how many clusters were identified (the top row) and how many cells belong to each cluster (the bottom row)
 table(nn.clusters)
