@@ -1,10 +1,10 @@
 # (PART\*) ANNOTATION {-}
 
+# Marker gene detection
+
 We have managed to identify clusters of related cells in the data. However, these clusters aren't very useful until we can identify the biology meaning of each group. This is where functional annotation comes in.
 
 The real art, and the greatest challenge, in an scRNA-seq analysis comes when interpreting the results. Up to this point (cleaning and clustering the data), the analysis and computation has been straightforward. Figuring out the biological state that each cluster represents, on the other hand, is more difficult, as it requires applying prior biological knowledge to the dataset. 
-
-# Marker gene detection
 
 Thanks to previous research, we know many _marker genes_, or genes can be used to identify particular cell types. These genes are differentially expressed across cell types, and by examining the expression profiles of multiple marker genes across all the clusters, we can assign particular cell type identities to each cluster. 
 
