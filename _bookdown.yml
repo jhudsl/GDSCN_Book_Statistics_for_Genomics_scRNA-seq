@@ -6,8 +6,7 @@ rmd_files: ["index.Rmd",
             "06-data-cleaning.Rmd",
             "07-clustering.Rmd",
             "08-annotation.Rmd",
-            "About.Rmd",
-            "References.Rmd"]
+            "About.Rmd"]
 new_session: yes
 bibliography: [book.bib]
 delete_merged_file: true
