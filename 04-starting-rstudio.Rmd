@@ -36,25 +36,25 @@ ottrpal::include_slide("https://docs.google.com/presentation/d/1eypYLLqD11-NwHLs
 ottrpal::include_slide("https://docs.google.com/presentation/d/1eypYLLqD11-NwHLs4adGpcuSB07dYEJfAaALSMvgzqw/edit#slide=id.ge08067d6e2_0_0")
     ```
 
-1. Leave everything else as-is. To create your RStudio Cloud Environment, click on the ìCREATEî button.
+1. Leave everything else as-is. To create your RStudio Cloud Environment, click on the ‚ÄúCREATE‚Äù button.
 
     ```{r, echo=FALSE, fig.alt='Screenshot of the Application configuration menu. The "Create" button is highlighted.'}
 ottrpal::include_slide("https://docs.google.com/presentation/d/1eypYLLqD11-NwHLs4adGpcuSB07dYEJfAaALSMvgzqw/edit#slide=id.ge08067d6e2_0_34")
     ```
 
-1. Your Cloud Environment will be available in a few minutes after the cloud resources are provisioned and your software starts up. The upper right corner displays the status and should say ìCreatingî while resources are being provisioned.
+1. Your Cloud Environment will be available in a few minutes after the cloud resources are provisioned and your software starts up. The upper right corner displays the status and should say ‚ÄúCreating‚Äù while resources are being provisioned.
 
     ```{r, echo=FALSE, fig.alt='Screenshot of the Workspace page. A cloud environment for RStudio is being created. The loading icon on the top right of the page is highlighted.'}
 ottrpal::include_slide("https://docs.google.com/presentation/d/1eypYLLqD11-NwHLs4adGpcuSB07dYEJfAaALSMvgzqw/edit#slide=id.ge08067d6e2_0_6")
     ```
 
-1. After a few minutes, you will see the status change to ìRunningî.
+1. After a few minutes, you will see the status change to ‚ÄúRunning‚Äù.
 
     ```{r, echo=FALSE, fig.alt='Screenshot of the Workspace page. A cloud environment for RStudio has been created. The icon on the top right showing that the cloud environment is running is highlighted.'}
 ottrpal::include_slide("https://docs.google.com/presentation/d/1eypYLLqD11-NwHLs4adGpcuSB07dYEJfAaALSMvgzqw/edit#slide=id.ge08067d6e2_0_10")
     ```
 
-1. Click on the ìRî icon to launch RStudio.
+1. Click on the ‚ÄúR‚Äù icon to launch RStudio.
 
     ```{r, echo=FALSE, fig.alt='Screenshot of the Workspace page. A cloud environment for RStudio has been created. The R button that launches the RStudio interface is highlighted.'}
 ottrpal::include_slide("https://docs.google.com/presentation/d/1eypYLLqD11-NwHLs4adGpcuSB07dYEJfAaALSMvgzqw/edit#slide=id.ge08067d6e2_0_43")
@@ -80,7 +80,7 @@ BiocManager::install("AnVIL")
 ottrpal::include_slide("https://docs.google.com/presentation/d/1BLTCaogA04bbeSD1tR1Wt-mVceQA6FHXa8FmFzIARrg/edit#slide=id.g11f12bc99af_0_49")
     ```
 
-1. You can now quickly install precompiled binaries using the AnVIL packageís `install()` function. We will use it to install the `Glimma` package and the `airway` package. The `airway` package contains a `SummarizedExperiment` data class. This data describes an RNA-Seq experiment on four human airway smooth muscle cell lines treated with dexamethasone. We will learn more about SummarizedExperiments in [following chapters](the-summarizedexperiment-class.html#summarizedexperiment).
+1. You can now quickly install precompiled binaries using the AnVIL package‚Äôs `install()` function. We will use it to install the `Glimma` package and the `airway` package. The `airway` package contains a `SummarizedExperiment` data class. This data describes an RNA-Seq experiment on four human airway smooth muscle cell lines treated with dexamethasone. We will learn more about SummarizedExperiments in [following chapters](the-summarizedexperiment-class.html#summarizedexperiment).
 
     ```{r, eval = FALSE}
 AnVIL::install(c("Glimma", "airway"))
@@ -184,7 +184,7 @@ ottrpal::include_slide("https://docs.google.com/presentation/d/1BLTCaogA04bbeSD1
 ottrpal::include_slide("https://docs.google.com/presentation/d/1BLTCaogA04bbeSD1tR1Wt-mVceQA6FHXa8FmFzIARrg/edit#slide=id.g11f12bc99af_0_84")
     ```
 
-1. You should minimize charges when you are not performing an analysis. You can do this by clicking on ìStop cloud environmentî. This will release the CPU and memory resources for other people to use. Note that your work will be saved in the environment and continue to accrue a very small cost. Your instructor can delete these environments to stop costs accruing, so it's a good idea to save code or output somewhere else, such as GitHub or your local machine.
+1. You should minimize charges when you are not performing an analysis. You can do this by clicking on ‚ÄúStop cloud environment‚Äù. This will release the CPU and memory resources for other people to use. Note that your work will be saved in the environment and continue to accrue a very small cost. Your instructor can delete these environments to stop costs accruing, so it's a good idea to save code or output somewhere else, such as GitHub or your local machine.
 
     ```{r, echo=FALSE, fig.alt='Screenshot of the RStudio interface. The stop icon on the top right which stops the cloud environment is highlighted.'}
 ottrpal::include_slide("https://docs.google.com/presentation/d/1BLTCaogA04bbeSD1tR1Wt-mVceQA6FHXa8FmFzIARrg/edit#slide=id.g11f12bc99af_0_91")
@@ -192,13 +192,13 @@ ottrpal::include_slide("https://docs.google.com/presentation/d/1BLTCaogA04bbeSD1
 
 ## Delete RStudio Cloud Environment
 
-1. [Stopping](#stopping) your cloud environment only pauses your work. When you are ready to delete the cloud environment, click on the gear icon in the upper right corner to ìUpdate cloud environmentî.
+1. [Stopping](#stopping) your cloud environment only pauses your work. When you are ready to delete the cloud environment, click on the gear icon in the upper right corner to ‚ÄúUpdate cloud environment‚Äù.
 
     ```{r, echo=FALSE, fig.alt='Screenshot of the Workspace page. The gear icon on the top right that updates the cloud environment is highlighted.'}
 ottrpal::include_slide("https://docs.google.com/presentation/d/1eypYLLqD11-NwHLs4adGpcuSB07dYEJfAaALSMvgzqw/edit#slide=id.ge1182913a6_0_41")
     ```
 
-1. Click on ìDelete Environment Optionsî.
+1. Click on ‚ÄúDelete Environment Options‚Äù.
 
     ```{r, echo=FALSE, fig.alt='Screenshot of the cloud environment popout. "Delete environment options" is highlighted.'}
 ottrpal::include_slide("https://docs.google.com/presentation/d/1eypYLLqD11-NwHLs4adGpcuSB07dYEJfAaALSMvgzqw/edit#slide=id.ge1182913a6_0_20")
