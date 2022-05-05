@@ -225,21 +225,22 @@ code span.wa { color: #8f5902; font-weight: bold; font-style: italic; } /* Warni
 <p>Graph-based clustering is based on identifying the nearest neighbors of each cell in high-dimensional space. The connections between a cell and its neighbors (called edges) are weighted based on the similarity of the two cells connected. An edge is assigned a higher weight if the two cells it connects are more closely related. After all cells have been connected to their neighbors, we apply an algorithm to identify clusters, or communities, of related cells. Each cell within a community will be more closely related to any cell within the same community than to cells outside the community.</p>
 <p>Graph-based clustering scales easily, because it only used a <em>k</em>-nearest neighbor search. These searches run more quickly than other methods (like hierarchical clustering). Unfortunately, no information is retained about relationships beyond the neighboring cells. This effect also means that clustering resolution depends on cell density.</p>
 <div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="clustering.html#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># let the R algorithm define and label our clusters</span></span>
-<span id="cb20-2"><a href="clustering.html#cb20-2" aria-hidden="true" tabindex="-1"></a>snn.gr <span class="ot">&lt;-</span> <span class="fu">buildSNNGraph</span>(sce.zeisel.PCA<span class="fl">.1000</span>, <span class="at">use.dimred =</span> <span class="st">&quot;PCA&quot;</span>)</span>
+<span id="cb20-2"><a href="clustering.html#cb20-2" aria-hidden="true" tabindex="-1"></a>nn.clusters <span class="ot">&lt;-</span> <span class="fu">clusterCells</span>(sce.zeisel.tsne20, <span class="at">use.dimred=</span><span class="st">&quot;PCA&quot;</span>)</span>
 <span id="cb20-3"><a href="clustering.html#cb20-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-4"><a href="clustering.html#cb20-4" aria-hidden="true" tabindex="-1"></a><span class="fu">colLabels</span>(sce.zeisel.PCA<span class="fl">.1000</span>) <span class="ot">&lt;-</span> <span class="fu">factor</span>(igraph<span class="sc">::</span><span class="fu">cluster_walktrap</span>(snn.gr)<span class="sc">$</span>membership)</span>
-<span id="cb20-5"><a href="clustering.html#cb20-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-6"><a href="clustering.html#cb20-6" aria-hidden="true" tabindex="-1"></a><span class="co"># this command tells us how many clusters were identified (the top row) and how many cells belong to each cluster (the bottom row)</span></span>
-<span id="cb20-7"><a href="clustering.html#cb20-7" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(<span class="fu">colLabels</span>(sce.zeisel.PCA<span class="fl">.1000</span>))</span></code></pre></div>
-<pre><code>## 
+<span id="cb20-4"><a href="clustering.html#cb20-4" aria-hidden="true" tabindex="-1"></a><span class="co"># this command tells us how many clusters were identified (the top row) and how many cells belong to each cluster (the bottom row)</span></span>
+<span id="cb20-5"><a href="clustering.html#cb20-5" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(nn.clusters)</span></code></pre></div>
+<pre><code>## nn.clusters
 ##   1   2   3   4   5   6   7   8   9  10  11  12  13  14  15 
 ## 284 147 107 195 604 166 475  62 119 256 221  67  53  28  32</code></pre>
 <p>We assigned the cluster assignments back into our <code>SingleCellExperiment</code> object as a factor in the column metadata, which allows us to visualize the cluster assignment on a t-SNE plot.</p>
 <div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="clustering.html#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># create a t-SNE plot showing the identified clusters</span></span>
-<span id="cb22-2"><a href="clustering.html#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="co">#plotTSNE(sce.zeisel.PCA.1000, colour_by = &quot;label&quot;)</span></span></code></pre></div>
-<p>::: {.fyi}
-QUESTIONS
-1. How many clusters were identified using graph-based clustering? Which cluster contained the most cells, and how many cells did it have?:::</p>
+<span id="cb22-2"><a href="clustering.html#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="fu">colLabels</span>(sce.zeisel.tsne20) <span class="ot">&lt;-</span> nn.clusters</span>
+<span id="cb22-3"><a href="clustering.html#cb22-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plotReducedDim</span>(sce.zeisel.tsne20, <span class="st">&quot;TSNE&quot;</span>, <span class="at">colour_by=</span><span class="st">&quot;label&quot;</span>)</span></code></pre></div>
+<p><img src="07-clustering_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
+<div class="fyi">
+<p>QUESTIONS
+1. How many clusters were identified using graph-based clustering? Which cluster contained the most cells, and how many cells did it have?</p>
+</div>
 <div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="clustering.html#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sessionInfo</span>()</span></code></pre></div>
 <pre><code>## R version 4.1.3 (2022-03-10)
 ## Platform: x86_64-pc-linux-gnu (64-bit)
@@ -342,8 +343,6 @@ QUESTIONS
 
 
 
-<p>The real art, and the greatest challenge, in an scRNA-seq analysis comes when interpreting the results. Up to this point (cleaning and clustering the data), the analysis and computation has been straightforward. Figuring out the biological state that each cluster represents, on the other hand, is more difficult, as it requires applying prior biological knowledge to the dataset.</p>
-</div>
 <hr>
 <center> 
   <div class="footer">

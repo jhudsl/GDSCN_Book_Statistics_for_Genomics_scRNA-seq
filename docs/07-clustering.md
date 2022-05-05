@@ -126,16 +126,14 @@ Graph-based clustering scales easily, because it only used a _k_-nearest neighbo
 
 ```r
 # let the R algorithm define and label our clusters
-snn.gr <- buildSNNGraph(sce.zeisel.PCA.1000, use.dimred = "PCA")
-
-colLabels(sce.zeisel.PCA.1000) <- factor(igraph::cluster_walktrap(snn.gr)$membership)
+nn.clusters <- clusterCells(sce.zeisel.tsne20, use.dimred="PCA")
 
 # this command tells us how many clusters were identified (the top row) and how many cells belong to each cluster (the bottom row)
-table(colLabels(sce.zeisel.PCA.1000))
+table(nn.clusters)
 ```
 
 ```
-## 
+## nn.clusters
 ##   1   2   3   4   5   6   7   8   9  10  11  12  13  14  15 
 ## 284 147 107 195 604 166 475  62 119 256 221  67  53  28  32
 ```
@@ -145,13 +143,17 @@ We assigned the cluster assignments back into our `SingleCellExperiment` object 
 
 ```r
 # create a t-SNE plot showing the identified clusters
-#plotTSNE(sce.zeisel.PCA.1000, colour_by = "label")
+colLabels(sce.zeisel.tsne20) <- nn.clusters
+plotReducedDim(sce.zeisel.tsne20, "TSNE", colour_by="label")
 ```
 
+<img src="07-clustering_files/figure-html/unnamed-chunk-7-1.png" width="672" />
 
-::: {.fyi}
+
+:::{.fyi}
 QUESTIONS
-1. How many clusters were identified using graph-based clustering? Which cluster contained the most cells, and how many cells did it have?:::
+1. How many clusters were identified using graph-based clustering? Which cluster contained the most cells, and how many cells did it have?
+:::
 
 
 ```r
