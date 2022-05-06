@@ -32,6 +32,8 @@ dec.zeisel.qc <- modelGeneVarWithSpikes(sce.zeisel.qc, "ERCC")
 top1000.hvgs <- getTopHVGs(dec.zeisel.qc, n=1000)
 sce.zeisel.PCA.1000 <- denoisePCA(sce.zeisel.qc, technical=dec.zeisel.qc, subset.row=top1000.hvgs)
 sce.zeisel.tsne20 <- runTSNE(sce.zeisel.PCA.1000, dimred="PCA")
+nn.clusters <- clusterCells(sce.zeisel.tsne20, use.dimred="PCA")
+colLabels(sce.zeisel.tsne20) <- nn.clusters
 ```
 
   * **AUC** (area under the curve) is the probability that a randomly chosen observation from cluster A is greater than a randomly chosen observation from cluster B. This statistic is a way to quantify how well we can distinguish between two distributions (clusters) in a pairwise comparison. An AUC of 1 means all values in cluster A are greater than any value from cluster B and suggests upregulation. An AUC of of 0.5 means the two clusters are indistinguishable from each other, while an AUC of 0 suggests the marker gene observations in cluster A are downregulated compared to those in cluster B. 
@@ -60,7 +62,7 @@ This dataframe shows us the in log-fold expression change for each potential mar
 Once we've identified potential marker genes, we can use a heatmap to compare gene expression in each cell between clusters. 
 
 ```{r, warning = FALSE, message = FALSE}
-# pull the top most upregulated markers from cluster 1 (compared to the rest of the clusters) and look at their expression in all clusters
+# pull the top-most upregulated markers from cluster 1 (compared to the rest of the clusters) and look at their expression in all clusters
 top.markers <- rownames(marker.set)[marker.set$Top <= 10]
 plotHeatmap(sce.zeisel.tsne20, features = top.markers, order_columns_by = "label")
 ```
