@@ -29,9 +29,49 @@ For this exercise, we're going to focus on upregulated markers, since those are 
 
 ```r
 # identify those genes which are upregulated in some clusters compared to others
-#markers <- findMarkers(sce.zeisel.qc, direction = "up")
-#marker.set <- markers[["1"]]
-#head(marker.set, 10)
+markers <- findMarkers(sce.zeisel.tsne20, direction = "up")
+marker.set <- markers[["1"]]
+head(marker.set, 10)
+```
+
+```
+## DataFrame with 10 rows and 18 columns
+##               Top      p.value          FDR summary.logFC   logFC.2   logFC.3
+##         <integer>    <numeric>    <numeric>     <numeric> <numeric> <numeric>
+## Syngr3          1 5.71433e-140 1.90535e-137       2.44603  1.156187 1.1330628
+## Mllt11          1 3.31857e-249 7.37681e-246       2.87647  0.971725 1.4504728
+## Ndrg4           1  0.00000e+00  0.00000e+00       3.83936  1.146289 0.9309904
+## Slc6a1          1 1.75709e-160 8.57373e-158       3.46313  3.063161 3.2821288
+## Gad1            1 4.70797e-234 8.56251e-231       4.54282  4.024699 4.3901265
+## Gad2            1 1.32400e-208 1.76586e-205       4.24931  3.756435 3.9505814
+## Atp1a3          1 3.54623e-279 1.41892e-275       3.45285  1.213985 0.0213418
+## Slc32a1         2 1.50335e-109 2.48562e-107       1.91750  1.791641 1.8496954
+## Rcan2           2 9.25451e-129 2.50197e-126       2.21812  1.432185 2.1127708
+## Rab3a           2 1.61475e-202 1.61523e-199       2.52266  0.884615 0.6329209
+##           logFC.4   logFC.5   logFC.6   logFC.7   logFC.8   logFC.9  logFC.10
+##         <numeric> <numeric> <numeric> <numeric> <numeric> <numeric> <numeric>
+## Syngr3    2.38928   2.44603 0.7085503 0.8470822  1.159959  2.525116  1.030908
+## Mllt11    2.94289   2.87647 0.4897958 0.0882716  1.030983  3.262597  0.471414
+## Ndrg4     3.67150   3.83936 0.3680955 0.7169171  1.103046  3.646328  0.791827
+## Slc6a1    2.92969   2.88778 3.6063318 3.5292982  2.218826  0.704948  3.571574
+## Gad1      4.37025   4.46268 4.6478826 4.5428243  4.477666  4.386587  4.572889
+## Gad2      4.08621   4.15971 4.2916168 4.2222656  4.229715  4.207704  4.249309
+## Atp1a3    3.18678   3.45285 0.6498389 0.1656598  0.426762  3.436859 -0.228370
+## Slc32a1   1.93798   1.91658 1.9393715 1.9092434  1.913338  1.917505  1.910826
+## Rcan2     1.81884   1.25488 1.1051970 2.1730716  2.170402  2.102633  2.218119
+## Rab3a     2.73747   2.52266 0.0267138 0.3133349  0.695216  2.921335  0.163635
+##          logFC.11  logFC.12  logFC.13  logFC.14  logFC.15
+##         <numeric> <numeric> <numeric> <numeric> <numeric>
+## Syngr3   0.684417   2.56482   2.55195   2.58830   2.42180
+## Mllt11   0.229326   3.04261   2.77725   3.08889   2.01497
+## Ndrg4    0.565654   3.82140   4.14743   3.97144   4.01655
+## Slc6a1   3.463131   3.43495   3.34170   3.05042   3.25178
+## Gad1     4.568481   4.51547   4.50591   4.39482   4.63836
+## Gad2     4.263975   4.16831   4.29808   4.09088   4.35014
+## Atp1a3   1.118434   3.31854   3.78426   3.67087   3.60817
+## Slc32a1  1.916869   1.94707   1.94707   1.94707   1.90680
+## Rcan2    1.142480   2.09515   1.26318   1.46319   2.24552
+## Rab3a    0.508261   3.16930   2.54753   3.06401   2.30063
 ```
 
 This dataframe shows us the in log-fold expression change for each potential marker gene between cluster 1 and every other cluster.
@@ -41,27 +81,31 @@ This dataframe shows us the in log-fold expression change for each potential mar
 Once we've identified potential marker genes, we can use a heatmap to compare gene expression in each cell between clusters. 
 
 
+
+
 ```r
-# pull the top most upregulated markers from cluster 1 (compared to the rest of the clusters) and look at their expression in all clusters
-#top.markers <- rownames(marker.set)[marker.set$Top <= 10]
-#plotHeatmap(sce.zeisel.PCA.1000, features = top.markers, order_columns_by = "label")
+# pull the top-most upregulated markers from cluster 1 (compared to the rest of the clusters) and look at their expression in all clusters
+top.markers <- rownames(marker.set)[marker.set$Top <= 10]
+plotHeatmap(sce.zeisel.tsne20, features = top.markers, order_columns_by = "label")
 ```
+
+<img src="08-annotation_files/figure-html/unnamed-chunk-4-1.png" width="672" />
 
 In this heatmap, clusters are on the horizontal, while the top upregulated genes in cluster 1 are on the vertical. The magnitude of the log-fold expression change is indicated by color of each cell. 
 
 We can also create a heatmap that shows the mean log-fold change of cluster 1 cells compared to the mean of each other cluster. This can simplify the heatmap and is useful when dealing with many clusters.
 
 
-
-
 ```r
 # AnVIL::install("pheatmap")
-#library(pheatmap)
+library(pheatmap)
 
 #this heatmap lets us compare the average expression of the gene within a cluster compared to the other clusters
-#logFCs <- getMarkerEffects(marker.set[1:50,])
-#pheatmap(logFCs, breaks = seq(-5, 5, length.out = 101))
+logFCs <- getMarkerEffects(marker.set[1:50,])
+pheatmap(logFCs, breaks = seq(-5, 5, length.out = 101))
 ```
+
+<img src="08-annotation_files/figure-html/unnamed-chunk-5-1.png" width="672" />
 
 Here we see that three genes are generally upregulated in Cluster 1 compared to the other clusters: _Gad1_, _Gad2_, and _Slc6a1_. This is where prior biological knowledge comes in handy, as both _Gad1_ and _Slc6a1_ are known interneuron markers (Zeng et al. 2012).
 
@@ -212,14 +256,15 @@ sessionInfo()
 ##  [1] AUCell_1.16.0               GSEABase_1.56.0            
 ##  [3] graph_1.72.0                annotate_1.72.0            
 ##  [5] XML_3.99-0.9                AnnotationDbi_1.56.2       
-##  [7] BiocSingular_1.10.0         scran_1.22.1               
-##  [9] scater_1.22.0               ggplot2_3.3.5              
-## [11] scuttle_1.4.0               scRNAseq_2.8.0             
-## [13] SingleCellExperiment_1.16.0 SummarizedExperiment_1.24.0
-## [15] Biobase_2.54.0              GenomicRanges_1.46.1       
-## [17] GenomeInfoDb_1.30.1         IRanges_2.28.0             
-## [19] S4Vectors_0.32.4            BiocGenerics_0.40.0        
-## [21] MatrixGenerics_1.6.0        matrixStats_0.61.0         
+##  [7] pheatmap_1.0.12             BiocSingular_1.10.0        
+##  [9] scran_1.22.1                scater_1.22.0              
+## [11] ggplot2_3.3.5               scuttle_1.4.0              
+## [13] scRNAseq_2.8.0              SingleCellExperiment_1.16.0
+## [15] SummarizedExperiment_1.24.0 Biobase_2.54.0             
+## [17] GenomicRanges_1.46.1        GenomeInfoDb_1.30.1        
+## [19] IRanges_2.28.0              S4Vectors_0.32.4           
+## [21] BiocGenerics_0.40.0         MatrixGenerics_1.6.0       
+## [23] matrixStats_0.61.0         
 ## 
 ## loaded via a namespace (and not attached):
 ##   [1] AnnotationHub_3.2.2           BiocFileCache_2.2.1          
@@ -244,44 +289,46 @@ sessionInfo()
 ##  [39] progress_1.2.2                dqrng_0.3.0                  
 ##  [41] bit_4.0.4                     rsvd_1.0.5                   
 ##  [43] metapod_1.2.0                 httr_1.4.2                   
-##  [45] ellipsis_0.3.2                R.methodsS3_1.8.1            
-##  [47] pkgconfig_2.0.3               sass_0.4.1                   
-##  [49] dbplyr_2.1.1                  locfit_1.5-9.5               
-##  [51] utf8_1.2.2                    tidyselect_1.1.2             
-##  [53] rlang_1.0.2                   later_1.3.0                  
-##  [55] munsell_0.5.0                 BiocVersion_3.14.0           
-##  [57] tools_4.1.3                   cachem_1.0.6                 
-##  [59] cli_3.2.0                     generics_0.1.2               
-##  [61] RSQLite_2.2.12                ExperimentHub_2.2.1          
-##  [63] evaluate_0.15                 stringr_1.4.0                
-##  [65] fastmap_1.1.0                 yaml_2.3.5                   
-##  [67] knitr_1.33                    bit64_4.0.5                  
-##  [69] purrr_0.3.4                   KEGGREST_1.34.0              
-##  [71] AnnotationFilter_1.18.0       sparseMatrixStats_1.6.0      
-##  [73] mime_0.12                     R.oo_1.24.0                  
-##  [75] xml2_1.3.3                    biomaRt_2.50.3               
-##  [77] compiler_4.1.3                beeswarm_0.4.0               
-##  [79] filelock_1.0.2                curl_4.3.2                   
-##  [81] png_0.1-7                     interactiveDisplayBase_1.32.0
-##  [83] statmod_1.4.36                tibble_3.1.6                 
-##  [85] bslib_0.3.1                   stringi_1.7.6                
-##  [87] GenomicFeatures_1.46.5        lattice_0.20-45              
-##  [89] bluster_1.4.0                 ProtGenerics_1.26.0          
-##  [91] Matrix_1.4-0                  vctrs_0.4.1                  
-##  [93] pillar_1.7.0                  lifecycle_1.0.1              
-##  [95] BiocManager_1.30.16           jquerylib_0.1.4              
-##  [97] BiocNeighbors_1.12.0          data.table_1.14.2            
-##  [99] bitops_1.0-7                  irlba_2.3.5                  
-## [101] httpuv_1.6.5                  rtracklayer_1.54.0           
-## [103] R6_2.5.1                      BiocIO_1.4.0                 
-## [105] bookdown_0.24                 promises_1.2.0.1             
-## [107] gridExtra_2.3                 vipor_0.4.5                  
-## [109] assertthat_0.2.1              rjson_0.2.21                 
-## [111] withr_2.5.0                   GenomicAlignments_1.30.0     
-## [113] Rsamtools_2.10.0              GenomeInfoDbData_1.2.7       
-## [115] parallel_4.1.3                hms_1.1.1                    
-## [117] grid_4.1.3                    beachmat_2.10.0              
-## [119] rmarkdown_2.10                DelayedMatrixStats_1.16.0    
-## [121] Rtsne_0.16                    shiny_1.7.1                  
-## [123] ggbeeswarm_0.6.0              restfulr_0.0.13
+##  [45] RColorBrewer_1.1-3            ellipsis_0.3.2               
+##  [47] R.methodsS3_1.8.1             farver_2.1.0                 
+##  [49] pkgconfig_2.0.3               sass_0.4.1                   
+##  [51] dbplyr_2.1.1                  locfit_1.5-9.5               
+##  [53] utf8_1.2.2                    tidyselect_1.1.2             
+##  [55] rlang_1.0.2                   later_1.3.0                  
+##  [57] munsell_0.5.0                 BiocVersion_3.14.0           
+##  [59] tools_4.1.3                   cachem_1.0.6                 
+##  [61] cli_3.2.0                     generics_0.1.2               
+##  [63] RSQLite_2.2.12                ExperimentHub_2.2.1          
+##  [65] evaluate_0.15                 stringr_1.4.0                
+##  [67] fastmap_1.1.0                 yaml_2.3.5                   
+##  [69] knitr_1.33                    bit64_4.0.5                  
+##  [71] purrr_0.3.4                   KEGGREST_1.34.0              
+##  [73] AnnotationFilter_1.18.0       sparseMatrixStats_1.6.0      
+##  [75] mime_0.12                     R.oo_1.24.0                  
+##  [77] xml2_1.3.3                    biomaRt_2.50.3               
+##  [79] compiler_4.1.3                beeswarm_0.4.0               
+##  [81] filelock_1.0.2                curl_4.3.2                   
+##  [83] png_0.1-7                     interactiveDisplayBase_1.32.0
+##  [85] statmod_1.4.36                tibble_3.1.6                 
+##  [87] bslib_0.3.1                   stringi_1.7.6                
+##  [89] highr_0.9                     GenomicFeatures_1.46.5       
+##  [91] lattice_0.20-45               bluster_1.4.0                
+##  [93] ProtGenerics_1.26.0           Matrix_1.4-0                 
+##  [95] vctrs_0.4.1                   pillar_1.7.0                 
+##  [97] lifecycle_1.0.1               BiocManager_1.30.16          
+##  [99] jquerylib_0.1.4               BiocNeighbors_1.12.0         
+## [101] data.table_1.14.2             bitops_1.0-7                 
+## [103] irlba_2.3.5                   httpuv_1.6.5                 
+## [105] rtracklayer_1.54.0            R6_2.5.1                     
+## [107] BiocIO_1.4.0                  bookdown_0.24                
+## [109] promises_1.2.0.1              gridExtra_2.3                
+## [111] vipor_0.4.5                   assertthat_0.2.1             
+## [113] rjson_0.2.21                  withr_2.5.0                  
+## [115] GenomicAlignments_1.30.0      Rsamtools_2.10.0             
+## [117] GenomeInfoDbData_1.2.7        parallel_4.1.3               
+## [119] hms_1.1.1                     grid_4.1.3                   
+## [121] beachmat_2.10.0               rmarkdown_2.10               
+## [123] DelayedMatrixStats_1.16.0     Rtsne_0.16                   
+## [125] shiny_1.7.1                   ggbeeswarm_0.6.0             
+## [127] restfulr_0.0.13
 ```
