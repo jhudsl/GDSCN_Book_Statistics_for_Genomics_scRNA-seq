@@ -68,7 +68,7 @@ install.packages("pheatmap")
 ```{r, warning = FALSE, message = FALSE}
 # pull the top-most upregulated markers from cluster 1 (compared to the rest of the clusters) and look at their expression in all clusters
 top.markers <- rownames(marker.set)[marker.set$Top <= 10]
-plotHeatmap(sce.zeisel.tsne20, features = top.markers, order_columns_by = "label")
+plotHeatmap(sce.zeisel.tsne20, features = top.markers, order_columns_by = "label", height=1500)
 ```
 
 In this heatmap, clusters are on the horizontal, while the top upregulated genes in cluster 1 are on the vertical. The magnitude of the log-fold expression change is indicated by color of each cell. 
@@ -81,7 +81,7 @@ library(pheatmap)
 
 #this heatmap lets us compare the average expression of the gene within a cluster compared to the other clusters
 logFCs <- getMarkerEffects(marker.set[1:50,])
-pheatmap(logFCs, breaks = seq(-5, 5, length.out = 101))
+pheatmap(logFCs, breaks = seq(-5, 5, length.out = 101), height=1500)
 ```
 
 Here we see that three genes are generally upregulated in Cluster 1 compared to the other clusters: _Gad1_, _Gad2_, and _Slc6a1_. This is where prior biological knowledge comes in handy, as both _Gad1_ and _Slc6a1_ are known interneuron markers (Zeng et al. 2012).
