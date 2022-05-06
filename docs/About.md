@@ -9,7 +9,7 @@ These credits are based on our [course contributors table guidelines](https://gi
 |-------|-----|
 |**Pedagogy**||
 |Lead Content Instructor|Elizabeth Humphries|
-|Content Idea Contributor|[Frederick Tan]|
+|Content Idea Contributor| [Ava Hoffman], [Frederick Tan]|
 |Content Directors | Kasper Hansen, [Jeff Leek], [Frederick Tan]|
 |**Production**||
 |Content Publisher|[Ira Gooding]|

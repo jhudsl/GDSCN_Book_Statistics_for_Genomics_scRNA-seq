@@ -4,11 +4,11 @@
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Chapter 4 References | AnVIL Book Name</title>
+  <title>Chapter 9 References | Statistics for Genomics: scRNAseq</title>
   <meta name="description" content="Description about Course/Book." />
   <meta name="generator" content="bookdown 0.24 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Chapter 4 References | AnVIL Book Name" />
+  <meta property="og:title" content="Chapter 9 References | Statistics for Genomics: scRNAseq" />
   <meta property="og:type" content="book" />
   
   
@@ -16,22 +16,22 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Chapter 4 References | AnVIL Book Name" />
+  <meta name="twitter:title" content="Chapter 9 References | Statistics for Genomics: scRNAseq" />
   
   <meta name="twitter:description" content="Description about Course/Book." />
   
 
 
 
-<meta name="date" content="2022-03-23" />
+<meta name="date" content="2022-05-06" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   <link rel="shortcut icon" href="assets/anvil_favicon.ico" type="image/x-icon" />
-<link rel="prev" href="about-the-authors.html"/>
-
+<link rel="prev" href="cell-type-annotation.html"/>
+<link rel="next" href="about-the-authors.html"/>
 <script src="libs/header-attrs-2.10/header-attrs.js"></script>
 <script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
@@ -118,28 +118,6 @@ code span.vs { color: #4e9a06; } /* VerbatimString */
 code span.wa { color: #8f5902; font-weight: bold; font-style: italic; } /* Warning */
 </style>
 
-<style type="text/css">
-/* Used with Pandoc 2.11+ new --citeproc when CSL is used */
-div.csl-bib-body { }
-div.csl-entry {
-  clear: both;
-}
-.hanging div.csl-entry {
-  margin-left:2em;
-  text-indent:-2em;
-}
-div.csl-left-margin {
-  min-width:2em;
-  float:left;
-}
-div.csl-right-inline {
-  margin-left:2em;
-  padding-left:1em;
-}
-div.csl-indent {
-  margin-left: 2em;
-}
-</style>
 
 <link rel="stylesheet" href="assets/AnVIL_style/style_anvil.css" type="text/css" />
 </head>
@@ -161,34 +139,51 @@ div.csl-indent {
 <ul>
 <li class="chapter" data-level="" data-path="index.html"><a href="index.html#anvil-collection"><i class="fa fa-check"></i>AnVIL Collection</a></li>
 </ul></li>
-<li class="chapter" data-level="1" data-path="introduction.html"><a href="introduction.html"><i class="fa fa-check"></i><b>1</b> Introduction</a>
+<li class="chapter" data-level="1" data-path="overview.html"><a href="overview.html"><i class="fa fa-check"></i><b>1</b> OVERVIEW</a>
 <ul>
-<li class="chapter" data-level="1.1" data-path="introduction.html"><a href="introduction.html#motivation"><i class="fa fa-check"></i><b>1.1</b> Motivation</a></li>
-<li class="chapter" data-level="1.2" data-path="introduction.html"><a href="introduction.html#target-audience"><i class="fa fa-check"></i><b>1.2</b> Target Audience</a></li>
-<li class="chapter" data-level="1.3" data-path="introduction.html"><a href="introduction.html#curriculum"><i class="fa fa-check"></i><b>1.3</b> Curriculum</a></li>
+<li class="chapter" data-level="1.1" data-path="overview.html"><a href="overview.html#scope"><i class="fa fa-check"></i><b>1.1</b> Scope</a></li>
+<li class="chapter" data-level="1.2" data-path="overview.html"><a href="overview.html#bioconductor-reference-book"><i class="fa fa-check"></i><b>1.2</b> Bioconductor reference book</a></li>
+<li class="chapter" data-level="1.3" data-path="overview.html"><a href="overview.html#singlecellexperiment"><i class="fa fa-check"></i><b>1.3</b> SingleCellExperiment</a></li>
+<li class="chapter" data-level="1.4" data-path="overview.html"><a href="overview.html#obtaining-data"><i class="fa fa-check"></i><b>1.4</b> Obtaining Data</a></li>
 </ul></li>
-<li class="chapter" data-level="2" data-path="a-new-chapter.html"><a href="a-new-chapter.html"><i class="fa fa-check"></i><b>2</b> A new chapter</a>
+<li class="part"><span><b>DATA CLEANING</b></span></li>
+<li class="chapter" data-level="2" data-path="quality-control-of-the-library.html"><a href="quality-control-of-the-library.html"><i class="fa fa-check"></i><b>2</b> Quality control of the library</a>
 <ul>
-<li class="chapter" data-level="2.1" data-path="a-new-chapter.html"><a href="a-new-chapter.html#learning-objectives"><i class="fa fa-check"></i><b>2.1</b> Learning Objectives</a></li>
-<li class="chapter" data-level="2.2" data-path="a-new-chapter.html"><a href="a-new-chapter.html#libraries"><i class="fa fa-check"></i><b>2.2</b> Libraries</a></li>
+<li class="chapter" data-level="2.1" data-path="quality-control-of-the-library.html"><a href="quality-control-of-the-library.html#visualizing-distributions-of-diagnostic-metrics-and-identifying-low-quality-cells"><i class="fa fa-check"></i><b>2.1</b> Visualizing distributions of diagnostic metrics and identifying low-quality cells</a></li>
+<li class="chapter" data-level="2.2" data-path="quality-control-of-the-library.html"><a href="quality-control-of-the-library.html#identifying-and-removing-low-quality-cells"><i class="fa fa-check"></i><b>2.2</b> Identifying and removing low-quality cells</a></li>
 </ul></li>
-<li class="chapter" data-level="3" data-path="topic-of-section.html"><a href="topic-of-section.html"><i class="fa fa-check"></i><b>3</b> Topic of Section</a>
+<li class="chapter" data-level="3" data-path="normalization.html"><a href="normalization.html"><i class="fa fa-check"></i><b>3</b> Normalization</a>
 <ul>
-<li class="chapter" data-level="3.1" data-path="topic-of-section.html"><a href="topic-of-section.html#subtopic"><i class="fa fa-check"></i><b>3.1</b> Subtopic</a>
+<li class="chapter" data-level="3.1" data-path="normalization.html"><a href="normalization.html#calculating-scaling-factors"><i class="fa fa-check"></i><b>3.1</b> Calculating scaling factors</a></li>
+<li class="chapter" data-level="3.2" data-path="normalization.html"><a href="normalization.html#applying-scaling-factors-and-computing-normalized-expression-values"><i class="fa fa-check"></i><b>3.2</b> Applying scaling factors and computing normalized expression values</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="choosing-features-for-the-analysis.html"><a href="choosing-features-for-the-analysis.html"><i class="fa fa-check"></i><b>4</b> Choosing features for the analysis</a>
 <ul>
-<li class="chapter" data-level="3.1.1" data-path="topic-of-section.html"><a href="topic-of-section.html#code-examples"><i class="fa fa-check"></i><b>3.1.1</b> Code examples</a></li>
-<li class="chapter" data-level="3.1.2" data-path="topic-of-section.html"><a href="topic-of-section.html#image-example"><i class="fa fa-check"></i><b>3.1.2</b> Image example</a></li>
-<li class="chapter" data-level="3.1.3" data-path="topic-of-section.html"><a href="topic-of-section.html#video-examples"><i class="fa fa-check"></i><b>3.1.3</b> Video examples</a></li>
-<li class="chapter" data-level="3.1.4" data-path="topic-of-section.html"><a href="topic-of-section.html#links-to-files"><i class="fa fa-check"></i><b>3.1.4</b> Links to files</a></li>
-<li class="chapter" data-level="3.1.5" data-path="topic-of-section.html"><a href="topic-of-section.html#links-to-websites"><i class="fa fa-check"></i><b>3.1.5</b> Links to websites</a></li>
-<li class="chapter" data-level="3.1.6" data-path="topic-of-section.html"><a href="topic-of-section.html#citation-examples"><i class="fa fa-check"></i><b>3.1.6</b> Citation examples</a></li>
-<li class="chapter" data-level="3.1.7" data-path="topic-of-section.html"><a href="topic-of-section.html#fyi-boxes"><i class="fa fa-check"></i><b>3.1.7</b> FYI boxes</a></li>
-<li class="chapter" data-level="3.1.8" data-path="topic-of-section.html"><a href="topic-of-section.html#dropdown-summaries"><i class="fa fa-check"></i><b>3.1.8</b> Dropdown summaries</a></li>
+<li class="chapter" data-level="4.1" data-path="choosing-features-for-the-analysis.html"><a href="choosing-features-for-the-analysis.html#examining-per-gene-variation"><i class="fa fa-check"></i><b>4.1</b> Examining per-gene variation</a></li>
+<li class="chapter" data-level="4.2" data-path="choosing-features-for-the-analysis.html"><a href="choosing-features-for-the-analysis.html#selecting-highly-variable-genes"><i class="fa fa-check"></i><b>4.2</b> Selecting highly variable genes</a></li>
 </ul></li>
-<li class="chapter" data-level="3.2" data-path="topic-of-section.html"><a href="topic-of-section.html#print-out-session-info"><i class="fa fa-check"></i><b>3.2</b> Print out session info</a></li>
+<li class="part"><span><b>CLUSTERING</b></span></li>
+<li class="chapter" data-level="5" data-path="dimensionality-reduction.html"><a href="dimensionality-reduction.html"><i class="fa fa-check"></i><b>5</b> Dimensionality reduction</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="dimensionality-reduction.html"><a href="dimensionality-reduction.html#calculating-and-choosing-pcs"><i class="fa fa-check"></i><b>5.1</b> Calculating and choosing PCs</a></li>
+<li class="chapter" data-level="5.2" data-path="dimensionality-reduction.html"><a href="dimensionality-reduction.html#applying-non-linear-visualization-methods-to-pcs"><i class="fa fa-check"></i><b>5.2</b> Applying non-linear visualization methods to PCs</a></li>
 </ul></li>
+<li class="chapter" data-level="6" data-path="clustering.html"><a href="clustering.html"><i class="fa fa-check"></i><b>6</b> Clustering</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="clustering.html"><a href="clustering.html#clustering-using-graph-based-methods"><i class="fa fa-check"></i><b>6.1</b> Clustering using graph-based methods</a></li>
+</ul></li>
+<li class="part"><span><b>ANNOTATION</b></span></li>
+<li class="chapter" data-level="7" data-path="marker-gene-detection.html"><a href="marker-gene-detection.html"><i class="fa fa-check"></i><b>7</b> Marker gene detection</a>
+<ul>
+<li class="chapter" data-level="7.1" data-path="marker-gene-detection.html"><a href="marker-gene-detection.html#calculating-and-ranking-effect-size-summary-statistics"><i class="fa fa-check"></i><b>7.1</b> Calculating and ranking effect size summary statistics</a></li>
+<li class="chapter" data-level="7.2" data-path="marker-gene-detection.html"><a href="marker-gene-detection.html#comparing-gene-expression-levels-across-clusters"><i class="fa fa-check"></i><b>7.2</b> Comparing gene expression levels across clusters</a></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="cell-type-annotation.html"><a href="cell-type-annotation.html"><i class="fa fa-check"></i><b>8</b> Cell type annotation</a>
+<ul>
+<li class="chapter" data-level="8.1" data-path="cell-type-annotation.html"><a href="cell-type-annotation.html#annotating-cell-types"><i class="fa fa-check"></i><b>8.1</b> Annotating cell types</a></li>
+</ul></li>
+<li class="chapter" data-level="9" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i><b>9</b> References</a></li>
 <li class="chapter" data-level="" data-path="about-the-authors.html"><a href="about-the-authors.html"><i class="fa fa-check"></i>About the Authors</a></li>
-<li class="chapter" data-level="4" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i><b>4</b> References</a></li>
 <li class="divider"></li>
 <p style="text-align:center;"> <a href="https://github.com/jhudsl/DaSL_Course_Template_Bookdown" target="blank" > This content was published with</a> <a href="https://bookdown.org/" target="blank"> bookdown by: </a> </p>
 <p style="text-align:center;"> <a href="http://jhudatascience.org/"> The Johns Hopkins Data Science Lab </a></p>
@@ -203,7 +198,7 @@ div.csl-indent {
       <div class="body-inner">
         <div class="book-header" role="navigation">
           <h1>
-            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">AnVIL Book Name</a>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Statistics for Genomics: scRNAseq</a>
           </h1>
         </div>
 
@@ -223,17 +218,13 @@ div.csl-indent {
 <div class="hero-image-container"> 
   <img class= "hero-image" src="assets/AnVIL_style/dasl_thin_main_image.png">
 </div>
-<div id="references" class="section level1" number="4">
-<h1><span class="header-section-number">Chapter 4</span> References</h1>
+<div id="references" class="section level1" number="9">
+<h1><span class="header-section-number">Chapter 9</span> References</h1>
+<p>Tasic B et al. Adult mouse cortical cell taxonomy revealed by single cell transcriptomics. Nat Neurosci. 2016 Feb;19(2):335-46. doi: 10.1038/nn.4216. Epub 2016 Jan 4. PMID: 26727548; PMCID: PMC4985242.</p>
+<p>Van der Maaten L, Hinton G. Visualizing data using t-SNE. J. Mach. Learn. Res. 2008 Nov;9:2579-2605.</p>
+<p>Zeisel A et al. Brain structure. Cell types in the mouse cortex and hippocampus revealed by single-cell RNA-seq. Science. 2015 Mar 6;347(6226):1138-42. doi: 10.1126/science.aaa1934. Epub 2015 Feb 19. PMID: 25700174.</p>
+<p>Zeng H et al. Large-scale cellular-resolution gene profiling in human neocortex reveals species-specific molecular signatures. Cell. 2012 Apr 13;149(2):483-96. doi: 10.1016/j.cell.2012.02.052. PMID: 22500809; PMCID: PMC3328777.</p>
 
-<div id="refs" class="references csl-bib-body hanging-indent">
-<div class="csl-entry">
-Allaire, JJ, Yihui Xie, Jonathan McPherson, Javier Luraschi, Kevin Ushey, Aron Atkins, Hadley Wickham, Joe Cheng, Winston Chang, and Richard Iannone. 2021. <em>Rmarkdown: Dynamic Documents for r</em>. <a href="https://github.com/rstudio/rmarkdown">https://github.com/rstudio/rmarkdown</a>.
-</div>
-<div class="csl-entry">
-Xie, Yihui, J. J. Allaire, and Garrett Grolemund. 2018. <em>R Markdown: The Definitive Guide</em>. Boca Raton, Florida: Chapman; Hall/CRC. <a href="https://bookdown.org/yihui/rmarkdown">https://bookdown.org/yihui/rmarkdown</a>.
-</div>
-</div>
 </div>
 <hr>
 <center> 
@@ -248,8 +239,8 @@ Xie, Yihui, J. J. Allaire, and Garrett Grolemund. 2018. <em>R Markdown: The Defi
           </div>
         </div>
       </div>
-<a href="about-the-authors.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-
+<a href="cell-type-annotation.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="about-the-authors.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
