@@ -61,6 +61,10 @@ This dataframe shows us the in log-fold expression change for each potential mar
 
 Once we've identified potential marker genes, we can use a heatmap to compare gene expression in each cell between clusters. 
 
+```{r, warning = FALSE, message = FALSE, echo=FALSE}
+install.packages("pheatmap")
+```
+
 ```{r, warning = FALSE, message = FALSE}
 # pull the top-most upregulated markers from cluster 1 (compared to the rest of the clusters) and look at their expression in all clusters
 top.markers <- rownames(marker.set)[marker.set$Top <= 10]
@@ -70,10 +74,6 @@ plotHeatmap(sce.zeisel.tsne20, features = top.markers, order_columns_by = "label
 In this heatmap, clusters are on the horizontal, while the top upregulated genes in cluster 1 are on the vertical. The magnitude of the log-fold expression change is indicated by color of each cell. 
 
 We can also create a heatmap that shows the mean log-fold change of cluster 1 cells compared to the mean of each other cluster. This can simplify the heatmap and is useful when dealing with many clusters.
-
-```{r, warning = FALSE, message = FALSE, echo=FALSE}
-install.packages("pheatmap")
-```
 
 ```{r, warning = FALSE, message = FALSE}
 # AnVIL::install("pheatmap")
