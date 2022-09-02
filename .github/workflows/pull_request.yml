@@ -376,8 +376,8 @@ jobs:
       # Set up git checkout
       - name: Set up git checkout
         run: |
-          git config --global user.email "itcrtrainingnetwork@gmail.com"
-          git config --global user.name "jhudsl-robot"
+          git config --local user.email "avamariehoffman@gmail.com"
+          git config --local user.name "avahoffman"
 
           branch_name='preview-${{ github.event.pull_request.number }}'
           git fetch --all
