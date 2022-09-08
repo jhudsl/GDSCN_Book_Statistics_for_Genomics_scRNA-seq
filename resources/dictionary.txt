@@ -50,7 +50,6 @@ ITN
 J
 Jan
 KEGG
-fyi
 L
 Leanpub
 Learn

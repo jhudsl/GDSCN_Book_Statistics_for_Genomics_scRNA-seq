@@ -7,7 +7,7 @@ bibliography: book.bib
 biblio-style: apalike
 link-citations: yes
 description: Description about Course/Book.
-favicon: assets/anvil_favicon.ico
+favicon: assets/GDSCN_style/gdscn_favicon.ico
 ---
 
 

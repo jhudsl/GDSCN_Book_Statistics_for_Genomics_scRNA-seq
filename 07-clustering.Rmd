@@ -104,7 +104,7 @@ out20
 out.umap
 ```
 
-::: {.fyi}
+::: {.reflection}
 QUESTIONS
 1. How does changing the perplexity parameter affect the t-SNE plot?
 
@@ -138,7 +138,7 @@ plotReducedDim(sce.zeisel.tsne20, "TSNE", colour_by="label")
 ```
 
 
-:::{.fyi}
+:::{.reflection}
 QUESTIONS
 1. How many clusters were identified using graph-based clustering? Which cluster contained the most cells, and how many cells did it have?
 :::
