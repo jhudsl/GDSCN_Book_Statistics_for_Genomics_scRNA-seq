@@ -86,7 +86,7 @@ pheatmap(logFCs, breaks = seq(-5, 5, length.out = 101))
 
 Here we see that three genes are generally upregulated in Cluster 1 compared to the other clusters: _Gad1_, _Gad2_, and _Slc6a1_. This is where prior biological knowledge comes in handy, as both _Gad1_ and _Slc6a1_ are known interneuron markers (Zeng et al. 2012).
 
-::: {.fyi}
+::: {.reflection}
 QUESTION
 1. Are there any groups or patterns you see in the second heatmap that look interesting?
 :::
@@ -161,7 +161,7 @@ tab
 
 As you can see, the labels applied by the researchers and by our annotation mostly match. (Pyramidal SS nerves are primarily glutamatergic, so although the categories are labeled differently, those two categories do indeed match!) The major exception is the oligodendrocyte precursor cells, which our annotation called astrocytes. However, this mismatch isn't as concerning as you might think, once you know that both astrocytes and oligodendrocytes come from the same precursor cell lineage.
 
-::: {.fyi}
+::: {.reflection}
 QUESTION
 1. Should we be concerned when 1 or 2 cells are assigned a different cell type identity by our annotation than by the researchers? Why or why not?
 :::
