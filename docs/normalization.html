@@ -23,13 +23,13 @@
 
 
 
-<meta name="date" content="2022-05-06" />
+<meta name="date" content="2022-09-13" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
-  <link rel="shortcut icon" href="assets/anvil_favicon.ico" type="image/x-icon" />
+  <link rel="shortcut icon" href="assets/GDSCN_style/gdscn_favicon.ico" type="image/x-icon" />
 <link rel="prev" href="quality-control-of-the-library.html"/>
 <link rel="next" href="choosing-features-for-the-analysis.html"/>
 <script src="libs/header-attrs-2.10/header-attrs.js"></script>
@@ -119,7 +119,7 @@ code span.wa { color: #8f5902; font-weight: bold; font-style: italic; } /* Warni
 </style>
 
 
-<link rel="stylesheet" href="assets/AnVIL_style/style_anvil.css" type="text/css" />
+<link rel="stylesheet" href="assets/GDSCN_style/style.css" type="text/css" />
 </head>
 
 <body>
@@ -132,7 +132,7 @@ code span.wa { color: #8f5902; font-weight: bold; font-style: italic; } /* Warni
       <nav role="navigation">
 
 <ul class="summary">
-<a href="https://anvilproject.org/" target="_blank"><img src="assets/AnVIL_style/logo-anvil.png" style="width: 80%; padding-left: 15px; padding-top: 8px;"</a>
+<a href="https://www.gdscn.org/" target="_blank"><img src="assets/GDSCN_style/logo-gdscn.png" style="width: 80%; padding-left: 15px; padding-top: 8px;"</a>
 
 <li class="divider"></li>
 <li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>About this Book</a>
@@ -185,7 +185,7 @@ code span.wa { color: #8f5902; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="9" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i><b>9</b> References</a></li>
 <li class="chapter" data-level="" data-path="about-the-authors.html"><a href="about-the-authors.html"><i class="fa fa-check"></i>About the Authors</a></li>
 <li class="divider"></li>
-<p style="text-align:center;"> <a href="https://github.com/jhudsl/DaSL_Course_Template_Bookdown" target="blank" > This content was published with</a> <a href="https://bookdown.org/" target="blank"> bookdown by: </a> </p>
+<p style="text-align:center;"> <a href="https://github.com/jhudsl/OTTR_Template" target="blank" > This content was published with</a> <a href="https://bookdown.org/" target="blank"> bookdown by: </a> </p>
 <p style="text-align:center;"> <a href="http://jhudatascience.org/"> The Johns Hopkins Data Science Lab </a></p>
 <a href="http://jhudatascience.org/"><img src="https://jhudatascience.org/images/dasl.png" style=" width: 80%; padding-left: 40px; padding-top: 8px; vertical-align: top "</a>
 <p style="text-align:center; font-size: 12px;"> <a href="https://github.com/rstudio4edu/rstudio4edu-book/"> Style adapted from: rstudio4edu-book </a> <a href ="https://creativecommons.org/licenses/by/2.0/"> (CC-BY 2.0) </a></p>
@@ -210,13 +210,13 @@ code span.wa { color: #8f5902; font-weight: bold; font-style: italic; } /* Warni
   <meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=10.0,initial-scale=1.0">
   <!--script src="https://kit.fontawesome.com/6a26f47516.js"></script-->
   <!--<script src="assets/hideOutput.js"></script>-->
-  <link href="assets/AnvIL_style/style_anvil.css" rel="stylesheet">
+  <link href="assets/GDSCN_style/style.css" rel="stylesheet">
 </head>
-        
 
 
-<div class="hero-image-container"> 
-  <img class= "hero-image" src="assets/AnVIL_style/dasl_thin_main_image.png">
+
+<div class="hero-image-container">
+  <img class= "hero-image" src="assets/GDSCN_style/dasl_thin_main_image.png">
 </div>
 <div id="normalization" class="section level1" number="3">
 <h1><span class="header-section-number">Chapter 3</span> Normalization</h1>
@@ -236,7 +236,7 @@ code span.wa { color: #8f5902; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb7-9"><a href="normalization.html#cb7-9" aria-hidden="true" tabindex="-1"></a><span class="co"># comparing scaling factors based on library size (librarySizeFactors) and deconvolution (sizeFactors)</span></span>
 <span id="cb7-10"><a href="normalization.html#cb7-10" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">librarySizeFactors</span>(sce.zeisel.qc), <span class="fu">sizeFactors</span>(sce.zeisel.qc), <span class="at">pch =</span> <span class="dv">16</span>, <span class="at">xlab =</span> <span class="st">&quot;Library size factors&quot;</span>, <span class="at">ylab =</span> <span class="st">&quot;Deconvolution factors&quot;</span>, <span class="at">log =</span> <span class="st">&quot;xy&quot;</span>)</span></code></pre></div>
 <p><img src="06-data-cleaning_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
-<div class="fyi">
+<div class="reflection">
 <p>QUESTIONS</p>
 <ol style="list-style-type: decimal">
 <li>How do the scaling factors using library size normalization compare to the scaling factors using deconvolution normalization?</li>

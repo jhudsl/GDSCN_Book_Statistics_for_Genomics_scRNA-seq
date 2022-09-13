@@ -86,7 +86,7 @@ sce.zeisel.qc <- sce.zeisel[,!qc$discard]
 ```
 
 
-::: {.fyi}
+::: {.reflection}
 QUESTIONS
 
 1. How many samples did you remove as suspected low-quality cells? 
@@ -97,7 +97,7 @@ QUESTIONS
 :::
 
 
-::: {.fyi}
+::: {.dictionary}
 Some researchers mark the suspected low-quality cells instead of removing them from the analysis. Ideally, the low-quality cells form their own cluster that can be ignored when interpreting the scRNA-seq results. This approach prevents the researcher from discarding cells or cell types that represent a true biological state and happen to have poor QC metrics.
 :::
 
@@ -128,7 +128,7 @@ plot(librarySizeFactors(sce.zeisel.qc), sizeFactors(sce.zeisel.qc), pch = 16, xl
 
 <img src="06-data-cleaning_files/figure-html/unnamed-chunk-5-1.png" width="672" />
 
-::: {.fyi}
+::: {.reflection}
 QUESTIONS
 
 1. How do the scaling factors using library size normalization compare to the scaling factors using deconvolution normalization?
@@ -204,7 +204,7 @@ dec.zeisel.qc[c(1,500,1000,2000),1:6]
 
 In this dataframe, the `bio` column represents the excess variation in gene expression (that is, the difference between the observed and expected expression). We are looking at four different genes - the gene with the greatest excess variation, as well as the last genes included in the top 500, top 1000, and top 2000 genes.
 
-::: {.fyi}
+::: {.reflection}
 QUESTIONS
 
 1. What is the range of log-fold expression changes (the excess variation) when you choose the top 500 genes? What about when you choose the top 1000 genes? The top 2000 genes? 

@@ -23,13 +23,13 @@
 
 
 
-<meta name="date" content="2022-05-06" />
+<meta name="date" content="2022-09-13" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
-  <link rel="shortcut icon" href="assets/anvil_favicon.ico" type="image/x-icon" />
+  <link rel="shortcut icon" href="assets/GDSCN_style/gdscn_favicon.ico" type="image/x-icon" />
 <link rel="prev" href="normalization.html"/>
 <link rel="next" href="dimensionality-reduction.html"/>
 <script src="libs/header-attrs-2.10/header-attrs.js"></script>
@@ -119,7 +119,7 @@ code span.wa { color: #8f5902; font-weight: bold; font-style: italic; } /* Warni
 </style>
 
 
-<link rel="stylesheet" href="assets/AnVIL_style/style_anvil.css" type="text/css" />
+<link rel="stylesheet" href="assets/GDSCN_style/style.css" type="text/css" />
 </head>
 
 <body>
@@ -132,7 +132,7 @@ code span.wa { color: #8f5902; font-weight: bold; font-style: italic; } /* Warni
       <nav role="navigation">
 
 <ul class="summary">
-<a href="https://anvilproject.org/" target="_blank"><img src="assets/AnVIL_style/logo-anvil.png" style="width: 80%; padding-left: 15px; padding-top: 8px;"</a>
+<a href="https://www.gdscn.org/" target="_blank"><img src="assets/GDSCN_style/logo-gdscn.png" style="width: 80%; padding-left: 15px; padding-top: 8px;"</a>
 
 <li class="divider"></li>
 <li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>About this Book</a>
@@ -185,7 +185,7 @@ code span.wa { color: #8f5902; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="9" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i><b>9</b> References</a></li>
 <li class="chapter" data-level="" data-path="about-the-authors.html"><a href="about-the-authors.html"><i class="fa fa-check"></i>About the Authors</a></li>
 <li class="divider"></li>
-<p style="text-align:center;"> <a href="https://github.com/jhudsl/DaSL_Course_Template_Bookdown" target="blank" > This content was published with</a> <a href="https://bookdown.org/" target="blank"> bookdown by: </a> </p>
+<p style="text-align:center;"> <a href="https://github.com/jhudsl/OTTR_Template" target="blank" > This content was published with</a> <a href="https://bookdown.org/" target="blank"> bookdown by: </a> </p>
 <p style="text-align:center;"> <a href="http://jhudatascience.org/"> The Johns Hopkins Data Science Lab </a></p>
 <a href="http://jhudatascience.org/"><img src="https://jhudatascience.org/images/dasl.png" style=" width: 80%; padding-left: 40px; padding-top: 8px; vertical-align: top "</a>
 <p style="text-align:center; font-size: 12px;"> <a href="https://github.com/rstudio4edu/rstudio4edu-book/"> Style adapted from: rstudio4edu-book </a> <a href ="https://creativecommons.org/licenses/by/2.0/"> (CC-BY 2.0) </a></p>
@@ -210,13 +210,13 @@ code span.wa { color: #8f5902; font-weight: bold; font-style: italic; } /* Warni
   <meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=10.0,initial-scale=1.0">
   <!--script src="https://kit.fontawesome.com/6a26f47516.js"></script-->
   <!--<script src="assets/hideOutput.js"></script>-->
-  <link href="assets/AnvIL_style/style_anvil.css" rel="stylesheet">
+  <link href="assets/GDSCN_style/style.css" rel="stylesheet">
 </head>
-        
 
 
-<div class="hero-image-container"> 
-  <img class= "hero-image" src="assets/AnVIL_style/dasl_thin_main_image.png">
+
+<div class="hero-image-container">
+  <img class= "hero-image" src="assets/GDSCN_style/dasl_thin_main_image.png">
 </div>
 <div id="choosing-features-for-the-analysis" class="section level1" number="4">
 <h1><span class="header-section-number">Chapter 4</span> Choosing features for the analysis</h1>
@@ -258,7 +258,7 @@ code span.wa { color: #8f5902; font-weight: bold; font-style: italic; } /* Warni
 ## Cdc42   3.34431   1.04001  0.385442  0.654563 9.97095e-38 2.96239e-36
 ## Vdac2   1.81697   1.08138  0.720031  0.361348 7.90101e-05 2.55550e-04</code></pre>
 <p>In this dataframe, the <code>bio</code> column represents the excess variation in gene expression (that is, the difference between the observed and expected expression). We are looking at four different genes - the gene with the greatest excess variation, as well as the last genes included in the top 500, top 1000, and top 2000 genes.</p>
-<div class="fyi">
+<div class="reflection">
 <p>QUESTIONS</p>
 <ol style="list-style-type: decimal">
 <li>What is the range of log-fold expression changes (the excess variation) when you choose the top 500 genes? What about when you choose the top 1000 genes? The top 2000 genes?</li>

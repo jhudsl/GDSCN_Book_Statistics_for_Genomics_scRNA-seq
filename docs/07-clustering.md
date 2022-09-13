@@ -106,7 +106,7 @@ out.umap
 
 <img src="07-clustering_files/figure-html/unnamed-chunk-5-2.png" width="672" />
 
-::: {.fyi}
+::: {.reflection}
 QUESTIONS
 1. How does changing the perplexity parameter affect the t-SNE plot?
 
@@ -150,7 +150,7 @@ plotReducedDim(sce.zeisel.tsne20, "TSNE", colour_by="label")
 <img src="07-clustering_files/figure-html/unnamed-chunk-7-1.png" width="672" />
 
 
-:::{.fyi}
+:::{.reflection}
 QUESTIONS
 1. How many clusters were identified using graph-based clustering? Which cluster contained the most cells, and how many cells did it have?
 :::
