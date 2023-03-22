@@ -163,7 +163,7 @@ sessionInfo()
 ```
 ## R version 4.1.3 (2022-03-10)
 ## Platform: x86_64-pc-linux-gnu (64-bit)
-## Running under: Ubuntu 20.04.4 LTS
+## Running under: Ubuntu 20.04.5 LTS
 ## 
 ## Matrix products: default
 ## BLAS:   /usr/lib/x86_64-linux-gnu/openblas-pthread/libblas.so.3
@@ -208,7 +208,7 @@ sessionInfo()
 ##  [25] RCurl_1.98-1.6                jsonlite_1.8.0               
 ##  [27] glue_1.6.2                    gtable_0.3.0                 
 ##  [29] zlibbioc_1.40.0               XVector_0.34.0               
-##  [31] DelayedArray_0.20.0           scales_1.2.0                 
+##  [31] DelayedArray_0.20.0           scales_1.2.1                 
 ##  [33] DBI_1.1.2                     edgeR_3.36.0                 
 ##  [35] Rcpp_1.0.8.3                  viridisLite_0.4.0            
 ##  [37] xtable_1.8-4                  progress_1.2.2               

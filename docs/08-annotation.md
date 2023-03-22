@@ -234,7 +234,7 @@ sessionInfo()
 ```
 ## R version 4.1.3 (2022-03-10)
 ## Platform: x86_64-pc-linux-gnu (64-bit)
-## Running under: Ubuntu 20.04.4 LTS
+## Running under: Ubuntu 20.04.5 LTS
 ## 
 ## Matrix products: default
 ## BLAS:   /usr/lib/x86_64-linux-gnu/openblas-pthread/libblas.so.3
@@ -275,7 +275,7 @@ sessionInfo()
 ##  [11] magrittr_2.0.3                memoise_2.0.1                
 ##  [13] ScaledMatrix_1.2.0            cluster_2.1.2                
 ##  [15] limma_3.50.3                  Biostrings_2.62.0            
-##  [17] R.utils_2.11.0                prettyunits_1.1.1            
+##  [17] R.utils_2.12.2                prettyunits_1.1.1            
 ##  [19] colorspace_2.0-3              blob_1.2.3                   
 ##  [21] rappdirs_0.3.3                ggrepel_0.9.1                
 ##  [23] xfun_0.26                     dplyr_1.0.8                  
@@ -283,7 +283,7 @@ sessionInfo()
 ##  [27] jsonlite_1.8.0                glue_1.6.2                   
 ##  [29] gtable_0.3.0                  zlibbioc_1.40.0              
 ##  [31] XVector_0.34.0                DelayedArray_0.20.0          
-##  [33] scales_1.2.0                  DBI_1.1.2                    
+##  [33] scales_1.2.1                  DBI_1.1.2                    
 ##  [35] edgeR_3.36.0                  Rcpp_1.0.8.3                 
 ##  [37] viridisLite_0.4.0             xtable_1.8-4                 
 ##  [39] progress_1.2.2                dqrng_0.3.0                  

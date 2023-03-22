@@ -198,7 +198,7 @@ dec.zeisel.qc[c(1,500,1000,2000),1:6]
 ##       <numeric> <numeric> <numeric> <numeric>   <numeric>   <numeric>
 ## Plp1    3.97379  16.80426  0.275699 16.528564 0.00000e+00 0.00000e+00
 ## Shfm1   2.64467   1.55363  0.534672  1.018959 5.54040e-47 2.04392e-45
-## Cdc42   3.34431   1.04001  0.385442  0.654563 9.97096e-38 2.96240e-36
+## Cdc42   3.34431   1.04001  0.385442  0.654563 9.97095e-38 2.96240e-36
 ## Vdac2   1.81697   1.08138  0.720031  0.361348 7.90102e-05 2.55550e-04
 ```
 
@@ -220,7 +220,7 @@ sessionInfo()
 ```
 ## R version 4.1.3 (2022-03-10)
 ## Platform: x86_64-pc-linux-gnu (64-bit)
-## Running under: Ubuntu 20.04.4 LTS
+## Running under: Ubuntu 20.04.5 LTS
 ## 
 ## Matrix products: default
 ## BLAS:   /usr/lib/x86_64-linux-gnu/openblas-pthread/libblas.so.3
@@ -265,7 +265,7 @@ sessionInfo()
 ##  [27] glue_1.6.2                    gtable_0.3.0                 
 ##  [29] zlibbioc_1.40.0               XVector_0.34.0               
 ##  [31] DelayedArray_0.20.0           BiocSingular_1.10.0          
-##  [33] scales_1.2.0                  edgeR_3.36.0                 
+##  [33] scales_1.2.1                  edgeR_3.36.0                 
 ##  [35] DBI_1.1.2                     Rcpp_1.0.8.3                 
 ##  [37] viridisLite_0.4.0             xtable_1.8-4                 
 ##  [39] progress_1.2.2                dqrng_0.3.0                  
