@@ -22,6 +22,7 @@ deconvolved
 der
 differentially
 dimensionality
+docx
 doi
 downregulated
 downregulation
@@ -78,6 +79,7 @@ PMC
 preprint
 QC
 Res
+Rmd
 RNA
 RNA-seq
 scanpy
